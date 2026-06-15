@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Fourly Planner</title>
+  <link rel="icon" type="image/png" href="./asset/icon .png">
+  <link href="https://fonts.googleapis.com/css2?family=Bellota+Text:wght@300;400&family=Cinzel:wght@400&family=Cormorant+Garamond:ital,wght@0,400;1,400&family=DM+Mono:wght@300;400&family=EB+Garamond:ital,wght@0,400;1,400&family=Forum&family=Jost:wght@300;400&family=Lato:wght@300;400&family=Lora:ital,wght@0,400;1,400&family=Marcellus&family=Medula+One&family=Montserrat:wght@300;400&family=Nunito:wght@300;400&family=Oswald:wght@300;400&family=Playfair+Display:ital,wght@0,400;1,400&family=Poppins:wght@300;400&family=Quicksand:wght@300;400&family=Raleway:wght@300;400&family=Space+Mono&family=Varela+Round&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <style>
+    /* ── YAZI BOYUTLARI ── */
+    :root { --radius: 4px; --radius-lg: 10px; --done: #2e7d32; --migrate: #d35400; --fs-xs: 11px; --fs-sm: 12px; --fs-norm: 14px; --fs-md: 16px; --fs-lg: 22px; --fs-xl: 28px; }
+    [data-fontsize="small"] { --fs-xs: 10px; --fs-sm: 11px; --fs-norm: 13px; --fs-md: 15px; --fs-lg: 20px; --fs-xl: 26px; }
+    [data-fontsize="large"] { --fs-xs: 12px; --fs-sm: 14px; --fs-norm: 16px; --fs-md: 18px; --fs-lg: 26px; --fs-xl: 32px; }
+
+    /* ── MODERN, ZIT UYUMLU VE ESTETİK RENK TEMALARI ── */
+    body[data-mode="light"] { --shadow: 0 4px 16px rgba(0,0,0,0.04); --sidebar-text: #ffffff; }
+    body[data-mode="dark"] { --shadow: 0 6px 24px rgba(0,0,0,0.5); --sidebar-text: #eaeaea; }
+
+    /* 1. Mystic Forest (Sage, Russian Green) */
+    body[data-theme="mystic_forest"][data-mode="light"] { --page-warm:#F4F6EC; --page-card:#FFFFFF; --sidebar-bg:#30253E; --ink:#1D1626; --ink-soft:#638872; --ink-muted:#80B9B1; --line:#E5E8D8; --line-strong:#C3C88C; --accent:#638872; --accent-pale:#E9EFEA; }
+    body[data-theme="mystic_forest"][data-mode="dark"] { --page-warm:#121413; --page-card:#1A1C1B; --sidebar-bg:#0C0E0D; --ink:#E4E6E4; --ink-soft:#9DB0A4; --ink-muted:#6C7D73; --line:#2B302D; --line-strong:#3E4540; --accent:#94C7B4; --accent-pale:#1C2621; }
+
+    /* 2. Ocean Sunset (Cadet Blue, Mandarin) */
+    body[data-theme="ocean_sunset"][data-mode="light"] { --page-warm:#FDF8F5; --page-card:#FFFFFF; --sidebar-bg:#406B8C; --ink:#1F3343; --ink-soft:#9CBCC6; --ink-muted:#8E9CA3; --line:#E4C5AF; --line-strong:#D1AB91; --accent:#EB8445; --accent-pale:#FDF1EA; }
+    body[data-theme="ocean_sunset"][data-mode="dark"] { --page-warm:#141312; --page-card:#1C1A19; --sidebar-bg:#0E0D0C; --ink:#E6E5E4; --ink-soft:#B0A7A1; --ink-muted:#7D746D; --line:#302B29; --line-strong:#453E3B; --accent:#EB8445; --accent-pale:#2E1E16; }
+
+    /* 3. Chocolate (American Silver, Bistre) */
+    body[data-theme="chocolate"][data-mode="light"] { --page-warm:#F5F5F4; --page-card:#FFFFFF; --sidebar-bg:#362419; --ink:#251810; --ink-soft:#55453A; --ink-muted:#8B9B93; --line:#CFCFCD; --line-strong:#B2B2B0; --accent:#55453A; --accent-pale:#EAE6E4; }
+    body[data-theme="chocolate"][data-mode="dark"] { --page-warm:#141312; --page-card:#1C1A1A; --sidebar-bg:#0E0C0C; --ink:#E6E5E4; --ink-soft:#ABA6A4; --ink-muted:#787471; --line:#2E2B2A; --line-strong:#423E3C; --accent:#8B9B93; --accent-pale:#1D2421; }
+
+    /* 4. Lotus Pond (Dark Green, Rosy Brown) */
+    body[data-theme="lotus_pond"][data-mode="light"] { --page-warm:#FDFCF2; --page-card:#FFFFFF; --sidebar-bg:#0A3323; --ink:#061C13; --ink-soft:#105666; --ink-muted:#839958; --line:#F7F4D5; --line-strong:#E0DBAF; --accent:#D3968C; --accent-pale:#F9EFEB; }
+    body[data-theme="lotus_pond"][data-mode="dark"] { --page-warm:#131412; --page-card:#1A1C1A; --sidebar-bg:#0D0F0E; --ink:#E4E6E4; --ink-soft:#A2ABA6; --ink-muted:#707A74; --line:#2A302C; --line-strong:#3D4540; --accent:#D3968C; --accent-pale:#2E1A17; }
+
+    /* 5. Retro Teal (Dolphin Gray, Copper) */
+    body[data-theme="retro_teal"][data-mode="light"] { --page-warm:#F8F6F0; --page-card:#FFFFFF; --sidebar-bg:#578088; --ink:#2B4044; --ink-soft:#864E3E; --ink-muted:#74948C; --line:#CFB580; --line-strong:#B89E6B; --accent:#CA7C4C; --accent-pale:#F9EFE9; }
+    body[data-theme="retro_teal"][data-mode="dark"] { --page-warm:#121414; --page-card:#1A1C1C; --sidebar-bg:#0D0E0E; --ink:#E4E6E6; --ink-soft:#9EAAAB; --ink-muted:#6C7A7B; --line:#2A2E2F; --line-strong:#3D4345; --accent:#CA7C4C; --accent-pale:#2B1C15; }
+
+    /* 6. Lapis Mosaic (Lapis Lazuli, Earth Yellow) */
+    body[data-theme="lapis_mosaic"][data-mode="light"] { --page-warm:#F2F5F8; --page-card:#FFFFFF; --sidebar-bg:#071742; --ink:#040D26; --ink-soft:#1A4D94; --ink-muted:#357CB6; --line:#D4DEE8; --line-strong:#AABED1; --accent:#D5A25E; --accent-pale:#FDF6EC; }
+    body[data-theme="lapis_mosaic"][data-mode="dark"] { --page-warm:#121316; --page-card:#1A1B1F; --sidebar-bg:#0C0D11; --ink:#E4E5E8; --ink-soft:#9DA4B5; --ink-muted:#6A7285; --line:#2A2D36; --line-strong:#3D414F; --accent:#D5A25E; --accent-pale:#2D2112; }
+
+    /* 7. Sweet Pastel (Berry Red, Chewing Gum) */
+    body[data-theme="sweet_pastel"][data-mode="light"] { --page-warm:#F7F9FA; --page-card:#FFFFFF; --sidebar-bg:#6E99AC; --ink:#2F444D; --ink-soft:#95C3CF; --ink-muted:#D6A5B6; --line:#D5DBDC; --line-strong:#B8C3C5; --accent:#B93644; --accent-pale:#FAEBEB; }
+    body[data-theme="sweet_pastel"][data-mode="dark"] { --page-warm:#131415; --page-card:#1B1C1E; --sidebar-bg:#0D0E0F; --ink:#E5E6E8; --ink-soft:#9EA4A8; --ink-muted:#6D7478; --line:#2B2E31; --line-strong:#3F4347; --accent:#D6A5B6; --accent-pale:#2C1E23; }
+
+    /* 8. Bohemian Fiesta (Malachite, Bubblegum) */
+    body[data-theme="bohemian_fiesta"][data-mode="light"] { --page-warm:#F3F9F9; --page-card:#FFFFFF; --sidebar-bg:#154B4C; --ink:#0C2D2E; --ink-soft:#30B8B2; --ink-muted:#A6480A; --line:#D1EAE9; --line-strong:#A9D8D7; --accent:#F66483; --accent-pale:#FEEFF2; }
+    body[data-theme="bohemian_fiesta"][data-mode="dark"] { --page-warm:#121414; --page-card:#1A1C1C; --sidebar-bg:#0D0E0E; --ink:#E4E6E6; --ink-soft:#9EA8A8; --ink-muted:#6C7777; --line:#292E2E; --line-strong:#3D4343; --accent:#F66483; --accent-pale:#2B151A; }
+
+    /* 9. Carnival Night (Garnet, Goldfinch) */
+    body[data-theme="carnival_night"][data-mode="light"] { --page-warm:#FFFDF5; --page-card:#FFFFFF; --sidebar-bg:#210100; --ink:#361611; --ink-soft:#8C0902; --ink-muted:#B14A36; --line:#FECE79; --line-strong:#E6A341; --accent:#B14A36; --accent-pale:#FCEAE9; }
+    body[data-theme="carnival_night"][data-mode="dark"] { --page-warm:#141211; --page-card:#1D1918; --sidebar-bg:#0E0D0C; --ink:#E8E6E5; --ink-soft:#B3A9A3; --ink-muted:#80756F; --line:#302826; --line-strong:#473A36; --accent:#E6A341; --accent-pale:#2B1C0B; }
+
+    /* 10. Coastal Breeze (Moonstone Blue, Beaver) */
+    body[data-theme="coastal_breeze"][data-mode="light"] { --page-warm:#F0F7F9; --page-card:#FFFFFF; --sidebar-bg:#174C53; --ink:#0B272A; --ink-soft:#685045; --ink-muted:#9B7A66; --line:#B7DBE4; --line-strong:#74B9C7; --accent:#9B7A66; --accent-pale:#F3EDE9; }
+    body[data-theme="coastal_breeze"][data-mode="dark"] { --page-warm:#121415; --page-card:#191C1D; --sidebar-bg:#0C0E0E; --ink:#E4E6E7; --ink-soft:#9EA5A8; --ink-muted:#6B7478; --line:#2A2E31; --line-strong:#3E4447; --accent:#74B9C7; --accent-pale:#162428; }    
+    
+    /* ── FONT SETLERİ (10 YENİ SET) ── */
+    [data-font="set1"] { --f-head: 'Forum', serif; --f-body: 'Raleway', sans-serif; }
+    [data-font="set2"] { --f-head: 'Marcellus', serif; --f-body: 'Bellota Text', cursive; }
+    [data-font="set3"] { --f-head: 'Playfair Display', serif; --f-body: 'Lato', sans-serif; }
+    [data-font="set4"] { --f-head: 'Medula One', cursive; --f-body: 'Quicksand', sans-serif; }
+    [data-font="set5"] { --f-head: 'Varela Round', sans-serif; --f-body: 'Nunito', sans-serif; }
+    [data-font="set6"] { --f-head: 'EB Garamond', serif; --f-body: 'Lora', serif; }
+    [data-font="set7"] { --f-head: 'Montserrat', sans-serif; --f-body: 'Poppins', sans-serif; }
+    [data-font="set8"] { --f-head: 'Oswald', sans-serif; --f-body: 'Jost', sans-serif; }
+    [data-font="set9"] { --f-head: 'Space Mono', monospace; --f-body: 'DM Mono', monospace; }
+    [data-font="set10"] { --f-head: 'Cinzel', serif; --f-body: 'Cormorant Garamond', serif; }
+
+    /* ── GENEL TASARIM ── */
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body { font-family:var(--f-body); background:var(--page-warm); color:var(--ink); min-height:100vh; display:flex; font-size:var(--fs-md); transition:background 0.3s ease, color 0.3s ease; overflow-x:hidden; }
+
+    /* SIDEBAR */
+    .sidebar{width:220px;min-height:100vh;background:var(--sidebar-bg);color:var(--sidebar-text);display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:100;overflow-y:auto;transition:transform 0.3s ease; border-right:2px solid var(--line-strong);}
+    .sidebar::-webkit-scrollbar { width: 4px; } .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); }
+    .sidebar-logo{padding:20px; border-bottom:2px solid var(--line-strong); display:flex; flex-direction:column; align-items:center; gap:10px; min-height:80px;}
+    .sidebar-logo h1{font-family:var(--f-head);font-size:var(--fs-lg);font-weight:600;line-height:1.2;}
+    .sidebar-logo p{font-size:var(--fs-xs);opacity:.7;margin-top:4px;text-transform:uppercase;font-family:var(--f-body);}
+    
+    .nav-section{padding:12px 16px 0;}
+    .nav-label { font-family:var(--f-head); font-size:var(--fs-sm); letter-spacing:1px; text-transform:uppercase; padding:6px 12px; font-weight:700; color:var(--sidebar-text); background:rgba(255, 255, 255, 0.12); border-left:4px solid var(--accent); border-radius:var(--radius); margin-top:12px; margin-bottom:4px; box-shadow:0 2px 4px rgba(0,0,0,0.1); }
+
+    .nav-item { display:flex; align-items:center; gap:10px; padding:8px 12px; border-radius:var(--radius); cursor:pointer; font-size:var(--fs-norm); font-weight:500; border:1px solid rgba(255,255,255,0.06); background:rgba(0,0,0,0.15); color:var(--sidebar-text); width:100%; text-align:left; font-family:var(--f-body); margin-bottom:4px; transition:all 0.2s ease; box-shadow:inset 0 1px 3px rgba(0,0,0,0.1); min-height:40px; }
+    .nav-item:hover { background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.2); transform:translateX(3px); }
+    .nav-item.active { background:var(--accent); color:#ffffff; font-weight:600; border-color:var(--accent); box-shadow:0 4px 12px rgba(0,0,0,0.3); }
+    .sidebar-footer{margin-top:auto;padding:16px;border-top:2px solid var(--line-strong); background:rgba(0,0,0,0.15);}
+
+    /* MAIN */
+    .main{margin-left:220px;flex:1;min-height:100vh;display:flex;flex-direction:column;transition: margin-left 0.3s ease, width 0.3s ease;}
+    .topbar{background:var(--page-card);border-bottom:2px solid var(--line-strong);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:var(--shadow);}
+    .topbar-title{font-family:var(--f-head);font-size:var(--fs-lg);font-style:italic;font-weight:600; display:flex; align-items:center; gap:10px; color:var(--accent);}
+    .topbar-date{font-size:var(--fs-xs);color:var(--ink-soft);font-weight:600;}
+    
+    .content{padding:32px;flex:1; max-width: 1400px; margin: 0 auto; width:100%; box-sizing: border-box; min-width: 0; display: block !important; align-content: flex-start;}
+    .panel{display:none !important; margin: 0 !important; padding: 0 !important;}
+    .panel.active{display:block !important; animation:fadeIn .2s ease;}
+    
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+    /* BUTTONS & ACTIONS */
+    .btn{font-family:var(--f-body);font-size:var(--fs-norm);font-weight:600;padding:7px 14px;border-radius:var(--radius);border:2px solid var(--line-strong);background:var(--page-card);color:var(--ink-soft);cursor:pointer;transition:all .15s;}
+    .btn:hover{background:var(--accent-pale);border-color:var(--accent);color:var(--accent);box-shadow:var(--shadow);}
+    .btn-primary{background:var(--accent);color:#ffffff;border-color:var(--accent);}
+    .btn-primary:hover{opacity:0.9;}
+    .action-btn{font-size:var(--fs-sm);padding:2px 6px;border-radius:var(--radius);border:2px solid var(--line-strong);background:var(--page-card);cursor:pointer;font-family:var(--f-body);color:var(--ink);font-weight:600;}
+    .action-btn:hover{background:var(--accent);color:#ffffff;border-color:var(--accent);}
+
+    .hover-actions { display: flex; visibility: hidden; opacity: 0; gap: 4px; align-self: center; margin-left: auto; transition: opacity 0.15s ease; flex-shrink: 0; }
+    .show-on-hover { display: flex; align-items: center; width: 100%; }
+    .show-on-hover:hover .hover-actions { visibility: visible; opacity: 1; pointer-events: auto; }
+
+    /* AGRESİF CARDS & GRIDS */
+    .card{background:var(--page-card);border:2px solid var(--line-strong);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow); margin-bottom:20px; display:flex; flex-direction:column;}
+    .card-title{font-size:var(--fs-sm);letter-spacing:1px;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--line-strong);padding-bottom:8px;}
+    .section-header{display:flex;align-items:baseline;gap:16px;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--line-strong); flex-wrap:wrap;}
+    .section-title{font-family:var(--f-head);font-size:var(--fs-xl);font-style:italic;font-weight:600;color:var(--accent);}
+    .section-sub{font-size:var(--fs-norm);color:var(--ink-soft);font-weight:400;}
+    .v2-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
+
+    .symbol-legend-info-bar { font-size:12px; color:var(--ink-soft); margin-bottom:16px; padding:10px; border:2px dashed var(--line-strong); background:var(--accent-pale); border-radius:var(--radius); display:flex; gap:20px; flex-wrap:wrap; font-weight:600; }
+
+    /* FORMS */
+    .form-row{margin-bottom:14px;}
+    .form-label{display:block;font-size:var(--fs-xs);letter-spacing:.8px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px;font-weight:600;}
+    .form-input,.form-select,.form-textarea{width:100%;font-family:var(--f-body);font-size:var(--fs-norm);padding:10px 14px;border:2px solid var(--line-strong);border-radius:var(--radius);background:var(--page-warm);color:var(--ink);outline:none;font-weight:600;}
+    .form-textarea{min-height:90px;resize:vertical;}
+    .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--accent); background:var(--page-card);}
+
+    /* LOG & LIST ITEMS */
+    .log-entry, .list-item-row { display:flex; align-items:center; padding:10px 12px; border-bottom:2px solid var(--line); gap:10px; background:var(--page-card);}
+    .log-entry:last-child, .list-item-row:last-child { border-bottom: none; }
+    .log-entry:hover, .list-item-row:hover { background:var(--accent-pale); }
+    .log-symbol { font-size:15px; width:26px; text-align:center; cursor:pointer; color:var(--accent); flex-shrink:0; font-weight:bold; }
+    .log-text { flex:1; font-size:var(--fs-norm); font-weight:600; line-height:1.5; word-break:break-word; min-width:0; color:var(--ink-soft); }
+
+    /* YILLIK */
+    .year-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+    .month-block{background:var(--page-card);border:2px solid var(--line-strong);border-radius:var(--radius-lg);padding:16px;min-height:140px;cursor:pointer;display:flex; flex-direction:column; box-shadow:var(--shadow);}
+    .month-block:hover { border-color: var(--accent); background: var(--accent-pale); }
+    .month-name{font-family:var(--f-head);font-size:var(--fs-md);font-style:italic;font-weight:600;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--line-strong);display:flex;align-items:center;justify-content:space-between;color:var(--accent);}
+    .month-entry{padding:6px 0;font-size:var(--fs-norm);font-weight:600;color:var(--ink-soft);border-bottom:2px solid var(--line);display:flex; align-items:center;}
+    .month-entry:last-child { border-bottom: none; }
+    .add-month-entry{display:flex;align-items:center;gap:6px;font-size:var(--fs-sm);color:var(--ink);cursor:pointer;margin-top:auto;padding:6px 0;background:none;border:none;font-family:var(--f-body);font-weight:600; justify-content:center; border:2px dashed var(--line-strong); border-radius:var(--radius);}
+    .add-month-entry:hover{color:var(--accent); background:var(--accent-pale); border-color:var(--accent);}
+
+    /* AYLIK */
+    .month-header-grid { display: grid; grid-template-columns: 320px 1fr; gap: 24px; margin-bottom: 20px; }
+    .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+    .cal-day-label{text-align:center;font-size:var(--fs-xs);color:var(--ink);padding:6px;font-weight:600;border-bottom:2px solid var(--line-strong);}
+    .cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:var(--fs-norm);border-radius:var(--radius);cursor:pointer;color:var(--ink-soft);position:relative;font-weight:600;border:1px solid var(--line);}
+    .cal-day:hover{border-color:var(--accent); background:var(--accent-pale); color:var(--accent);}
+    .cal-day.today{background:var(--accent);color:var(--ink) !important;border-color:var(--accent);font-weight:800;}
+    .cal-day.selected-day-focus { border: 2.5px solid var(--accent); background: var(--accent-pale); box-shadow: var(--shadow); }
+    .cal-day.has-event::after{content:'●';position:absolute;bottom:2px;font-size:6px;color:var(--accent);}
+    .cal-day.empty{opacity:0;pointer-events:none;}
+    .monthly-task{padding:8px 10px;border-bottom:2px solid var(--line);background:var(--page-card); display:flex; align-items:center;}
+    .monthly-task:last-child { border-bottom: none; }
+    .monthly-task:hover{background:var(--accent-pale);}
+
+    /* HAFTALIK */
+    .weekly-landscape-layout { display: flex; flex-direction: column; gap: 16px; width: 100%; }
+    .weekly-day-row-card { display: flex; background: var(--page-card); border: 2px solid var(--line-strong); border-radius: var(--radius-lg); box-shadow: var(--shadow); overflow: hidden; min-height: 85px; }
+    .weekly-day-row-header { width: 140px; background: var(--sidebar-bg); color: var(--sidebar-text); padding: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-right: 2px solid var(--line-strong); flex-shrink: 0; text-align: center; }
+    .weekly-day-row-name { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; font-weight: 600; }
+    .weekly-day-row-num { font-family: var(--f-head); font-size: var(--fs-lg); font-style: italic; font-weight: 600; margin-top: 2px; }
+    .weekly-day-row-body { flex: 1; padding: 12px 20px; display: flex; flex-direction: column; gap: 8px; justify-content: center; background: var(--page-card); }
+    .weekly-grid-task-pill { background: transparent; border-bottom: 2px solid var(--line); padding: 10px 4px; font-size: var(--fs-norm); font-weight: 600; display: flex; align-items: flex-start; gap: 12px; width: 100%; transition: background 0.1s; }
+    .weekly-grid-task-pill:last-child { border-bottom: none; }
+    .weekly-grid-task-pill:hover { background: var(--accent-pale); }
+
+    /* GÜNLÜK & NEW ENTRY */
+    .log-day-nav{display:flex;gap:6px;flex-wrap:wrap;}
+    .log-day-btn{font-size:var(--fs-sm);padding:5px 12px;border-radius:var(--radius);border:2px solid var(--line-strong);background:var(--page-card);cursor:pointer;font-family:var(--f-body);color:var(--ink);font-weight:600;}
+    .log-day-btn:hover{background:var(--accent-pale);color:var(--accent);border-color:var(--accent);}
+    .log-day-btn.today{background:var(--accent);color:#ffffff;border-color:var(--accent);}
+    .new-entry-box-container { background:var(--accent-pale); border:2px solid var(--line-strong); border-radius:var(--radius-lg); padding:16px; margin-top:24px; box-shadow:var(--shadow); }
+    .k-tag{font-size:var(--fs-xs);padding:2px 7px;border-radius:12px;flex-shrink:0;align-self:center;border:1px solid transparent;white-space:nowrap;font-weight:600;}
+
+    /* LİSTELER & HEDEFLER */
+    .lists-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .list-card { background: var(--page-card); border: 2px solid var(--line-strong); border-radius: var(--radius-lg); padding: 16px; display:flex; flex-direction:column; gap:12px; box-shadow:var(--shadow); }
+    .list-title { font-size: var(--fs-md); font-family: var(--f-head); font-style: italic; color: var(--accent); font-weight:600; margin-bottom: 6px; display: flex; justify-content: space-between; align-items:center; border-bottom:2px solid var(--line-strong); padding-bottom:8px; }
+    .list-item-row input[type=checkbox] { width:15px; height:15px; accent-color:var(--accent); cursor:pointer; flex-shrink:0; margin-right:8px; }
+
+    /* KANBAN */
+    .kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:16px; overflow-x: auto; padding-bottom: 8px;}
+    .kanban-col{background:var(--page-card);border:2px solid var(--line-strong);border-radius:var(--radius-lg);padding:16px;min-height:350px; min-width: 280px; box-shadow:var(--shadow);}
+    .kanban-col-title{font-size:var(--fs-sm);letter-spacing:1.2px;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--line-strong);padding-bottom:6px;}
+    .kanban-card{background:var(--page-warm);border:2px solid var(--line-strong);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px;cursor:grab;border-left:4px solid transparent; font-weight:600;}
+    .kanban-card.dragging{opacity:0.5; box-shadow:var(--shadow);}
+    .kanban-card-title{font-size:var(--fs-norm);font-weight:600;color:var(--ink);margin-bottom:6px;line-height:1.4;}
+    .kanban-add{display:flex;align-items:center;gap:8px;font-size:var(--fs-norm);color:var(--ink);font-weight:600;cursor:pointer;padding:8px;border-radius:var(--radius);background:var(--accent-pale);border:2px dashed var(--line-strong);width:100%;text-align:left;margin-top:8px;}
+    .kanban-add:hover{border-color:var(--accent);background:var(--page-card);color:var(--accent);}
+
+    /* ALIŞKANLIKLAR */
+    .habit-container { width: 100%; padding-bottom: 8px; }
+    .habit-header { display: none; }
+    .habit-row { display: flex; width: 100%; align-items: stretch; border-bottom: 2px solid var(--line); padding: 16px 0; gap: 20px; box-sizing: border-box; }
+    .habit-row:last-child { border-bottom: none; }
+    .habit-name { flex: 0 0 350px; display: flex; flex-direction: column; justify-content: center; font-size: var(--fs-norm); font-weight: 600; color: var(--ink-soft); word-break: break-word; text-align: justify; padding-right: 15px; }
+    .habit-dots { flex: 1; display: flex; gap: 2px; justify-content: space-between; align-items: center; min-width: 0; }
+    .habit-dot-wrapper { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; min-width: 0; }
+    .habit-day-label { font-size: 10px; font-weight: 600; color: var(--ink-soft); opacity: 0.7; }
+    .habit-dot { width: 100%; aspect-ratio: 1; max-width: 20px; max-height: 20px; border-radius: 4px; border: 2px solid var(--line-strong); cursor: pointer; transition: all 0.15s; background: var(--page-card); }
+    .habit-dot.filled { background: var(--accent); border-color: var(--accent); position: relative; }
+    .habit-dot.filled::after { content: '🔗'; position: absolute; font-size: 12px; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+    /* BEYİN DÖKÜMÜ & VİZYON PANOSU */
+    .brain-dump-area{min-height:220px;font-family:var(--f-body);font-size:var(--fs-md);font-weight:300;line-height:1.8;color:var(--ink);border:1px solid var(--line);border-radius:var(--radius-lg);padding:20px;background:var(--page-warm);outline:none;resize:vertical;width:100%;}
+    .dump-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+    .dump-tag{font-size:var(--fs-norm);padding:4px 12px;border-radius:20px;cursor:pointer;font-weight:300;border:1px solid var(--line);background:var(--page-card);}
+    .dump-note{background:var(--page-card);border:1px solid var(--line);border-radius:var(--radius-lg);padding:14px 16px;display:flex;align-items:flex-start;gap:16px;margin-bottom:10px; flex-wrap: nowrap; overflow: hidden;}
+    
+    .vision-board-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:16px; margin-top:16px;}
+    .vision-img { width:100%; height:160px; object-fit:cover; border:2px solid var(--line-strong); border-radius:var(--radius-lg); box-shadow:var(--shadow); cursor:pointer; }
+    .vision-note { background:#fffdd0; color:#222; border:2px solid #f1c40f; padding:16px; font-family:'Instrument Serif', serif; font-size:20px; font-weight:600; border-radius:var(--radius); box-shadow:var(--shadow); position:relative; min-height:160px; display:flex; align-items:center; justify-content:center; text-align:center;}
+
+    /* MODAL & SETTINGS */
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:10000;align-items:center;justify-content:center;overflow-y:auto;padding:20px;}
+    .modal-overlay.open{display:flex;}
+    .modal{background:var(--page-card);border-radius:var(--radius-lg);padding:28px;width:480px;max-width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.5); border:3px solid var(--line-strong); position:relative;}
+    .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;}
+    
+    /* İNDEX EKLENTİSİ */
+    .index-link { display:block; padding:12px; border-bottom:2px dashed var(--line-strong); color:var(--accent); text-decoration:none; font-size:var(--fs-norm); cursor:pointer !important; font-weight:600; transition:all 0.2s;}
+    .index-link:hover { padding-left:18px; background:var(--accent-pale); }
+
+    /* SETTINGS GRIDS */
+    .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .theme-btn { padding: 12px; border: 2px solid var(--line-strong); background: var(--page-card); color: var(--ink); border-radius: var(--radius); cursor: pointer; text-align: left; font-family: var(--f-body); font-size: var(--fs-norm); transition: all 0.2s; display:flex; align-items:center; font-weight:600;}
+    .theme-btn.active { border-color: var(--accent); background: var(--accent-pale); color:var(--accent); }
+    .theme-color-dot { width:14px; height:14px; border-radius:50%; margin-right:10px; flex-shrink:0; border:1px solid rgba(0,0,0,0.2); }
+
+    /* RESPONSIVE */
+    .mobile-menu-btn { display:none; background:none; border:none; font-size:24px; color:var(--ink); cursor:pointer; }
+    .sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:90; }
+    @media (max-width: 900px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.open { display:block; }
+      .main { margin-left: 0; }
+      .mobile-menu-btn { display:block; }
+      .hide-mobile { display:none; }
+      .topbar { padding: 16px 20px; }
+      .content { padding: 20px; }
+      .year-grid { grid-template-columns: repeat(2, 1fr); }
+      .month-header-grid { grid-template-columns: 1fr; }
+      .weekly-day-row-card { flex-direction: column; }
+      .weekly-day-row-header { width: 100%; border-right: none; border-bottom: 2px solid var(--line-strong); padding: 10px; }
+      .settings-grid, .lists-grid { grid-template-columns: 1fr; }
+      .new-entry-box-container { flex-wrap: wrap; gap: 8px; }
+      .hover-actions { visibility: visible; opacity: 1; margin-top: 8px; }
+    }
+    .task-text-press { touch-action:none; user-select:none; -webkit-user-select:none; cursor:pointer; }
+  </style>
+  <style id="dynamic-tag-styles"></style>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+</head>
+<body data-theme="mystic_forest" data-mode="light" data-font="set1" data-fontsize="medium">
+
+<div class="modal-overlay" id="auth-modal" style="display:flex; background:var(--page-warm); z-index:9999; align-items: center; justify-content: center;">
+  <div class="modal" style="text-align:center; max-width: 360px; display: flex; flex-direction: column; background: #1A2A2A; border-color: #2A3A3A;">
+    <img src="./asset/splash-logo.png" alt="Fourly Planner" style="width: 100%; max-width: 200px; height: auto; margin: 0 auto 16px; object-fit: contain;">
+    <div id="auth-hint-text" data-i18n="authH" style="font-size:var(--fs-sm); background:var(--accent-pale); color:var(--accent); padding:10px 8px; border-radius:var(--radius); margin-bottom:20px; font-weight:600; line-height:1.4;">⚠️ Please sign in or register.</div>
+    
+    <input type="email" id="auth-email" class="form-input" data-i18n-ph="authEm" placeholder="Email Address" style="margin-bottom:12px;">
+    
+    <div style="position:relative; margin-bottom:16px; width:100%;">
+      <input type="password" id="auth-password" class="form-input" data-i18n-ph="authPw" placeholder="Password (Min 6 chars)" style="width:100%; padding-right:40px;">
+      <span onclick="togglePassword()" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:16px; opacity:0.6; user-select:none;" title="Göster/Gizle">👁️</span>
+    </div>
+
+    <div style="display:flex; gap:10px; justify-content:center; margin-bottom:16px;">
+      <button class="btn" id="btn-auth-register" onclick="registerUser()" data-i18n="authRg">Register</button>
+      <button class="btn btn-primary" id="btn-auth-login" onclick="loginUser()" data-i18n="authLg">Login</button>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:8px; align-items:center;">
+        <p onclick="forgotPassword()" style="font-size:var(--fs-sm); color:var(--accent); cursor:pointer; text-decoration:underline; font-weight:600;" data-i18n="authForgot">Forgot Password?</p>
+        <p id="resend-verify-link" onclick="resendVerification()" style="font-size:var(--fs-xs); color:var(--ink-soft); cursor:pointer; text-decoration:underline; display:none; font-weight:600;">Yeniden Doğrulama E-postası Gönder</p>
+    </div>
+
+    <p id="auth-error" style="color:#b05070; font-size:var(--fs-xs); margin-top:12px; display:none; background:var(--accent-pale); padding:8px; border-radius:var(--radius); line-height:1.4; font-weight:600;"></p>
+  </div>
+</div>
+
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo" style="padding: 24px 20px 16px; position: relative;">
+    <img src="./asset/menu-logo.png" alt="Fourly Planner" style="width: 100%; max-width: 140px; height: auto; object-fit: contain;">
+    <button class="mobile-menu-btn" style="position: absolute; right: 10px; top: 10px; color:var(--sidebar-text); font-size:20px;" onclick="toggleSidebar()">✕</button>
+  </div>
+  
+  <div class="nav-section" style="padding-top:16px;">
+    <button class="nav-item active" onclick="showPanel('index')"><span class="nav-bullet">📖</span> <span data-i18n="navIdx">Index</span></button>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label" data-i18n="navTime">TIME PLAN</div>
+    <button class="nav-item" onclick="showPanel('yearly')"><img src="./asset/icon.ico" style="width:18px; height:18px; object-fit:contain;"> <span data-i18n="navYr">Yearly</span></button>
+    <button class="nav-item" onclick="showPanel('monthly')"><img src="./asset/icon.ico" style="width:18px; height:18px; object-fit:contain;"> <span data-i18n="navMo">Monthly</span></button>
+    <button class="nav-item" onclick="showPanel('weekly')"><img src="./asset/icon.ico" style="width:18px; height:18px; object-fit:contain;"> <span data-i18n="navWk">Weekly</span></button>
+    <button class="nav-item" onclick="showPanel('daily')"><img src="./asset/icon.ico" style="width:18px; height:18px; object-fit:contain;"> <span data-i18n="navDy">Daily</span></button>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label" data-i18n="navMod">MODULES</div>
+    <button class="nav-item" onclick="showPanel('goals')"><span class="nav-bullet">🎯</span> <span data-i18n="navGl">Goals</span></button>
+    <button class="nav-item" onclick="showPanel('kanban')"><span class="nav-bullet">⊞</span> <span data-i18n="navKb">Project Board</span></button>
+    <button class="nav-item" onclick="showPanel('brain')"><span class="nav-bullet">💭</span> <span data-i18n="navBr">Brain Dump</span></button>
+    <button class="nav-item" onclick="showPanel('vision')"><span class="nav-bullet">🖼</span> <span data-i18n="navVs">Vision Board</span></button>
+    <button class="nav-item" onclick="showPanel('habits')"><span class="nav-bullet">🔗</span> <span data-i18n="navHb">Habits</span></button>
+    <button class="nav-item" onclick="showPanel('tags')"><span class="nav-bullet">❖</span> <span data-i18n="navTg">Tags</span></button>
+    <button class="nav-item" onclick="showPanel('lists')"><span class="nav-bullet">≣</span> <span data-i18n="navLs">Lists</span></button>
+  </div>
+
+  <div class="sidebar-footer">
+    <button class="btn" style="width: 100%; text-align: left; background: transparent; border-color:rgba(255,255,255,.2); color:var(--sidebar-text); margin-bottom:8px; display:flex; align-items:center; gap:8px;" onclick="openModal('settings')"><span>⚙</span> <span data-i18n="navSt">Settings & Data</span></button>
+    <button class="btn" style="width: 100%; text-align: left; background: transparent; border-color:rgba(255,255,255,.2); color:var(--sidebar-text); display:flex; align-items:center; gap:8px;" onclick="openModal('profile')"><span>👤</span> <span id="sidebar-profile-name" style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Profile</span></button>
+  </div>
+</nav>
+
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-title">
+      <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+      <button class="btn" onclick="goBack()" style="padding:4px 10px; margin-right: 12px; font-size:var(--fs-sm); display:flex; align-items:center; gap:4px;" title="Geri"><span data-i18n="btnBk" class="hide-mobile">Back</span></button>
+      <img src="./asset/icon.ico" style="width:24px; height:24px; object-fit:contain; margin-right:6px; display:block;"> <span id="panel-title">Index</span>
+    </div>
+    <div class="topbar-date" id="topbar-date"></div>
+  </div>
+  <div class="content">
+
+    <div id="panel-index" class="panel active">
+      <div class="section-header"><span class="nav-bullet">📖</span> <span class="section-title" data-i18n="navIdx">Index</span><span class="section-sub" data-i18n="subIdx">quick access to modules</span></div>
+      <div class="card" id="index-links-container" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:12px;"></div>
+    </div>
+
+    <div id="panel-yearly" class="panel">
+      <div class="section-header">
+        <span class="section-title" id="year-title"></span>
+        <span class="section-sub" data-i18n="subYr">future events and dates</span>
+        <div style="margin-left:auto;display:flex;gap:8px;">
+          <button class="btn" onclick="currentYear--;renderYearly()">←</button>
+          <button class="btn" onclick="currentYear++;renderYearly()">→</button>
+        </div>
+      </div>
+      <div class="year-grid" id="year-grid"></div>
+      <div id="yearly-goals-render" style="margin-top:24px;"></div>
+      <div id="yearly-lists-render" style="margin-top:24px;"></div>
+    </div>
+
+    <div id="panel-monthly" class="panel">
+      <div class="section-header" style="margin-bottom:12px;">
+        <span class="section-title" id="month-title"></span>
+        <span class="section-sub" data-i18n="subMo">focus points and calendar</span>
+        <div style="margin-left:auto;display:flex;gap:8px;">
+          <button class="btn" onclick="changeMonth(-1)">←</button>
+          <button class="btn" onclick="changeMonth(1)">→</button>
+        </div>
+      </div>
+      <div class="symbol-legend-info-bar">
+        <span><b style="color:var(--accent);">●</b> <span class="leg-tsk" data-i18n="legTsk">Task</span></span> <span><b style="color:var(--accent);">○</b> <span class="leg-evt" data-i18n="legEvt">Event</span></span> <span><b style="color:var(--accent);">★</b> <span class="leg-pri" data-i18n="legPri">Priority</span></span> <span><b style="color:var(--accent);">✓</b> <span class="leg-dn" data-i18n="legDn">Done</span></span> <span><b style="color:var(--accent); font-size:14px;">&gt;</b> <span class="leg-mig" data-i18n="legMig">Migrated</span></span>
+      </div>
+      <div class="month-header-grid">
+        <div class="card"><div class="card-title" data-i18n="cal">Calendar</div><div class="cal-grid" id="cal-grid"></div></div>
+        <div class="card"><div class="card-title"><span id="monthly-filter-label"></span><button class="btn" style="font-size:var(--fs-sm);padding:3px 8px;" onclick="openModal('add_monthly')" data-i18n="btnAdd">+ Add</button></div><div id="monthly-tasks"></div></div>
+      </div>
+      <div id="monthly-goals-render" style="margin-top:24px;"></div>
+      <div id="monthly-lists-render" style="margin-top:24px;"></div>
+    </div>
+
+    <div id="panel-weekly" class="panel">
+      <div class="section-header" style="margin-bottom:12px;">
+        <span class="section-title" id="week-title"></span>
+        <span class="section-sub" id="week-subtitle"></span>
+        <div style="margin-left:auto;display:flex;gap:8px;">
+          <button class="btn" onclick="changeWeek(-1)">←</button>
+          <button class="btn" onclick="changeWeek(1)">→</button>
+        </div>
+      </div>
+      <div class="symbol-legend-info-bar">
+        <span><b style="color:var(--accent);">●</b> <span class="leg-tsk" data-i18n="legTsk">Task</span></span> <span><b style="color:var(--accent);">○</b> <span class="leg-evt" data-i18n="legEvt">Event</span></span> <span><b style="color:var(--accent);">★</b> <span class="leg-pri" data-i18n="legPri">Priority</span></span> <span><b style="color:var(--accent);">✓</b> <span class="leg-dn" data-i18n="legDn">Done</span></span> <span><b style="color:var(--accent); font-size:14px;">&gt;</b> <span class="leg-mig" data-i18n="legMig">Migrated</span></span>
+      </div>
+      <div class="weekly-landscape-layout" id="weekly-landscape-board"></div>
+      <div id="weekly-goals-render" style="margin-top:24px;"></div>
+      <div id="weekly-lists-render" style="margin-top:24px;"></div>
+    </div>
+
+    <div id="panel-daily" class="panel">
+      <div class="section-header" style="margin-bottom:12px;"><span class="section-title" data-i18n="navDy">Daily</span><span class="section-sub" data-i18n="subDy">detailed daily flow</span></div>
+      <div class="symbol-legend-info-bar">
+        <span><b style="color:var(--accent);">●</b> <span class="leg-tsk" data-i18n="legTsk">Task</span></span> <span><b style="color:var(--accent);">○</b> <span class="leg-evt" data-i18n="legEvt">Event</span></span> <span><b style="color:var(--accent);">★</b> <span class="leg-pri" data-i18n="legPri">Priority</span></span> <span><b style="color:var(--accent);">✓</b> <span class="leg-dn" data-i18n="legDn">Done</span></span> <span><b style="color:var(--accent); font-size:14px;">&gt;</b> <span class="leg-mig" data-i18n="legMig">Migrated</span></span>
+      </div>
+      <div style="margin-bottom:16px;"><div class="log-day-nav" id="day-nav"></div></div>
+      <div class="card"><div id="log-entries"></div></div>
+
+      <div class="new-entry-box-container">
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+          <input class="form-input" id="new-entry-input" data-i18n-ph="phEnt" placeholder="Add new task... (Enter)" style="flex:1; min-width:200px;" onkeydown="if(event.key==='Enter') handleNewEntryBtn()">
+          <select id="new-entry-tag" class="form-select" style="width:auto;"></select>
+          <select id="new-entry-recurrence" class="form-select" style="width:auto;">
+            <option value="none" data-i18n="rNo">No Repeat</option>
+            <option value="daily" data-i18n="rD">Daily</option>
+            <option value="weekly" data-i18n="rW">Weekly</option>
+            <option value="monthly" data-i18n="rM">Monthly</option>
+            <option value="yearly" data-i18n="rY">Yearly</option>
+          </select>
+          <button class="btn btn-primary" onclick="handleNewEntryBtn()" data-i18n="btnAdd">+ Add</button>
+        </div>
+      </div>
+      <div id="daily-goals-render" style="margin-top:24px; width:100%;"></div>
+      <div id="daily-lists-render" style="margin-top:24px; width:100%;"></div>
+    </div>
+
+    <div id="panel-goals" class="panel">
+      <div class="section-header">
+        <span class="section-title" data-i18n="navGl">Goals</span>
+        <span class="section-sub" data-i18n="subGl">yearly plans and focus points</span>
+        <div style="margin-left:auto;"><button class="btn btn-primary" onclick="openModal('add_goal_cat')" data-i18n="mCat">+ New Goal Group</button></div>
+      </div>
+      <div class="lists-grid" id="goals-container"></div>
+    </div>
+
+    <div id="panel-kanban" class="panel">
+      <div class="section-header"><span class="section-title" data-i18n="navKb">Project Board</span><span class="section-sub" data-i18n="subKb">manage processes with drag & drop</span></div>
+      <div class="kanban" id="kanban-board"></div>
+    </div>
+
+    <div id="panel-brain" class="panel">
+      <div class="section-header"><span class="section-title" data-i18n="navBr">Brain Dump</span><span class="section-sub" data-i18n="subBr">mind clearing space</span></div>
+      <div class="card">
+        <div class="dump-tags" id="brain-dump-tags-container"></div>
+        <textarea class="brain-dump-area" id="brain-dump-input" data-i18n-ph="phBr" placeholder="Dump everything on your mind..."></textarea>
+        <div style="margin-top:12px;text-align:right;"><button class="btn btn-primary" onclick="saveDumpNote()" data-i18n="btnSav">Save</button></div>
+      </div>
+      <div id="dump-notes-container" style="margin-top:20px;"></div>
+    </div>
+
+    <div id="panel-vision" class="panel">
+      <div class="section-header">
+        <span class="section-title" data-i18n="navVs">Vision Board</span>
+        <span class="section-sub" data-i18n="subVs">dreams, photos and less/more balance</span>
+        <div style="margin-left:auto; display:flex; gap:10px;">
+          <input type="file" id="vision-file-upload" accept="image/*" style="display:none;" onchange="uploadVisionPhoto(event)">
+          <button class="btn btn-primary" onclick="document.getElementById('vision-file-upload').click()" data-i18n="vUp">+ Upload Photo</button>
+          <button class="btn" onclick="addVisionPostIt()" data-i18n="vNt">+ Add Post-it</button>
+        </div>
+      </div>
+      <input type="file" id="vision-file-edit" accept="image/*" style="display:none;" onchange="editVisionPhotoAction(event)">
+      <div style="margin-bottom:20px; display:flex; gap:16px; width:100%; flex-wrap:wrap;">
+        <div style="flex:1; min-width:280px;"><label class="form-label" style="color:var(--done);" data-i18n="vMo">More (Increase)</label><textarea class="form-textarea" id="v3-more-textarea" oninput="save('v3_more_gains', this.value)"></textarea></div>
+        <div style="flex:1; min-width:280px;"><label class="form-label" style="color:var(--migrate);" data-i18n="vLe">Less (Decrease)</label><textarea class="form-textarea" id="v3-less-textarea" oninput="save('v3_less_gains', this.value)"></textarea></div>
+      </div>
+      <div style="text-align:right; margin-bottom:24px;"><button class="btn btn-primary" onclick="saveLessMoreGains(this)" data-i18n="vSv">Save Habit Goals</button></div>
+      
+      <div class="section-title" style="border-bottom:2px solid var(--line-strong); padding-bottom:8px; margin-bottom:16px; margin-top:32px; display:block; width:100%;" data-i18n="vBd">Vision Board</div>
+      <div class="vision-board-grid" id="vision-board-pins-container"></div>
+    </div>
+
+    <div id="panel-habits" class="panel">
+      <div class="section-header">
+        <span class="section-title" data-i18n="navHb">Alışkanlıklar</span><span id="habit-month-label" class="section-sub"></span>
+        <div style="margin-left:auto;display:flex;gap:8px;">
+          <button class="btn" onclick="changeHabitMonth(-1)">←</button>
+          <button class="btn" onclick="changeHabitMonth(1)">→</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="habit-container"><div class="habit-header" id="habit-header"></div><div id="habit-rows"></div></div>
+        <div style="margin-top:16px;padding-top:12px;border-top:2px solid var(--line-strong);"><button class="btn" onclick="openModal('add_habit')" data-i18n="hAdd">+ New Habit</button></div>
+      </div>
+    </div>
+
+    <div id="panel-tags" class="panel">
+      <div class="section-header"><span class="section-title" data-i18n="navTg">Tags</span><span class="section-sub" data-i18n="subTg">tag and filter tasks</span></div>
+      <div class="settings-grid">
+        <div class="card"><div class="card-title" data-i18n="tMan">Manage Tags</div><div id="tags-manage-area"></div></div>
+        <div class="card"><div class="card-title" data-i18n="tFil">Filter by Tag</div><select id="tags-filter-select" class="form-select-lg" style="margin-bottom:16px;" onchange="renderFilteredTasks()"></select><div id="tags-filter-results"></div></div>
+      </div>
+    </div>
+
+    <div id="panel-lists" class="panel">
+      <div class="section-header"><span class="section-title" data-i18n="navLs">Lists</span><span class="section-sub" data-i18n="subLs">categorized free lists</span><div style="margin-left:auto;"><button class="btn btn-primary" onclick="openModal('add_list')" data-i18n="lAdd">+ New List</button></div></div>
+      <div class="lists-grid" id="lists-container"></div>
+    </div>
+
+  </div>
+</main>
+
+<div class="modal-overlay" id="add-modal"><div class="modal"><div class="modal-title" id="modal-title">Title</div><div id="modal-body"></div><div class="modal-actions" id="modal-actions" style="display:flex;"><button class="btn" onclick="closeModal()" data-i18n="btnCanc">Cancel</button><button class="btn btn-primary" onclick="saveModal()" data-i18n="btnSav">Save</button></div></div></div>
+
+<script>
+  const i18n = {
+    en: { appName:"● Fourly Planner", appDesc:"v2 life os", navIdx:"Index", navTime:"TIME PLAN", navYr:"Yearly", navMo:"Monthly", navWk:"Weekly", navDy:"Daily", navMod:"MODULES", navGl:"Goals", navKb:"Project Board", navBr:"Brain Dump", navVs:"Vision Board", navHb:"Habits", navTg:"Tags", navLs:"Lists", navPr:"Profile", navSt:"Settings & Data", btnBk:"Back", btnAdd:"+ Add", btnOk:"OK", btnCanc:"Cancel", btnSav:"Save", subIdx:"quick access to modules", subYr:"future events and dates", subMo:"focus points and calendar", subWk:"weekly planning layout", subDy:"detailed daily flow", subGl:"yearly plans and focus points", subKb:"manage processes with drag & drop", subBr:"mind clearing space", subVs:"dreams, photos and less/more balance", subHb:"track your habits", subTg:"tag and filter tasks", subLs:"categorized free lists", legTsk:"Task", legEvt:"Event", legPri:"Priority", legDn:"Done", legMig:"Migrated (hold down on task)", cal:"Calendar", mTasks:"Tasks", phEnt:"Add new task... (Enter)", phBr:"Dump everything on your mind...", rNo:"No Repeat", rD:"Daily", rW:"Weekly", rM:"Monthly", rY:"Yearly", vMo:"More (Increase)", vLe:"Less (Decrease)", vSv:"Save Habit Goals", vUp:"+ Upload Photo", vNt:"+ Add Post-it", vBd:"Vision Board", hAdd:"+ New Habit", tMan:"Manage Tags", tFil:"Filter by Tag", selTg:"Select Tag...", lAdd:"+ New List", kTd:"To Do", kDg:"Doing", kDn:"Done", kAdd:"+ Add Task", authH:"⚠️ Please sign in or register.", authEm:"Email Address", authPw:"Password (Min 6 chars)", authRg:"Register", authLg:"Login", authGmailOnly:"Only @gmail.com email addresses are valid.", authReq:"Please don't leave fields empty!", authForgot:"Forgot Password?", authVerifyMsg:"Check your email for verification link.", authResetSent:"Password reset email sent!", authNotVerified:"Please verify your email first.", authResend:"Resend Verification Email", authShowPw:"Show/Hide", authInUse:"Email already in use.", authWeakPw:"Password is too weak (Min 6 chars).", sMd:"Appearance Mode", sLd:"☀️ Light / 🌙 Dark", sTh:"Color Palette", sFn:"Typography", sSz:"Font Size", sSm:"Small", sMed:"Medium", sLg:"Large", sDt:"Data Management", sEx:"⬇ Export Data", sIm:"⬆ Import Data", sLn:"Language", msgMig:"Task migrated! (>)", msgSync:"Sync Successful! Reloading...", msgErr:"Error: Corrupted file.", msgEmp:"No entries.", defH:"Drink Water (2L)", tg1:"● Idea", tg2:"🎨 Design", tg3:"🛒 Shopping", mEvt:"Add Event", mDay:"Day", mDesc:"Description", mRep:"Repeat Yearly", mSym:"Change Symbol", mNot:"Note / Text", mTim:"Time / Alarm 🔔", mTit:"Title", mNts:"Notes", mNam:"Name", mSch:"Convert to Task", mDat:"Scheduled Date", mCat:"New Goal Group", mGy:"Yearly", mGm:"Monthly", mGw:"Weekly", mGd:"Daily", mBg:"Background:", mCol:"Text Color:", mOut:"🚪 Logout", mInf:"Information", mEmp:"No goals group yet.", fS1:"Elegant Minimal", fS2:"Boho Chic", fS3:"Modern Serif", fS4:"Creative Story", fS5:"Cute & Bubbly", fS6:"Classic Garalde", fS7:"Minimalist Sans", fS8:"Strictly Business", fS9:"Tech Mono", fS10:"Stylish Fashion", m1:"Jan", m2:"Feb", m3:"Mar", m4:"Apr", m5:"May", m6:"Jun", m7:"Jul", m8:"Aug", m9:"Sep", m10:"Oct", m11:"Nov", m12:"Dec", d1:"Mon", d2:"Tue", d3:"Wed", d4:"Thu", d5:"Fri", d6:"Sat", d7:"Sun", lItm:"+ Add Item", phNewTag:"New Tag Name", mRepMo:"Repeat Monthly", mWarn:"Warning", mDelHabit:"Deleting this habit will erase data for all months.<br><br>Continue?", mYesDel:"Yes, Delete", mEdit:"Edit", mNoDate:"Date not found.", msgSaved:"✔ Saved", msgNoHabit:"No habits for this month.", mDateReq:"Date?", mRec:"Repeat", mTotHabits:"Total Habits:" },
+    tr: { appName:"● Fourly Planner", appDesc:"v2 life os", navIdx:"İndeks", navTime:"ZAMAN PLANI", navYr:"Yıllık", navMo:"Aylık", navWk:"Haftalık", navDy:"Günlük", navMod:"MODÜLLER", navGl:"Hedefler", navKb:"Projeler", navBr:"Beyin Fırtınası", navVs:"Vizyon Panosu", navHb:"Alışkanlıklar", navTg:"Etiketler", navLs:"Listeler", navPr:"Profil", navSt:"Ayarlar & Veri", btnBk:"Geri", btnAdd:"+ Ekle", btnOk:"Tamam", btnCanc:"İptal", btnSav:"Kaydet", subIdx:"koleksiyonlara ve özel sayfalara hızlı erişim", subYr:"gelecek etkinlikler ve özel günler", subMo:"odak noktaları ve takvim", subWk:"haftalık planlama akışı", subDy:"detaylı günlük planlama akışı", subGl:"yıllık planlar ve odak noktaları", subKb:"sürükle ve bırak ile süreçleri yönet", subBr:"zihni boşaltma alanı", subVs:"hayaller, fotoğraflar ve az/çok dengesi", subHb:"alışkanlık takibi", subTg:"görevleri etiketle ve filtrele", subLs:"kategorize edilmiş serbest listeler", legTsk:"Görev", legEvt:"Etkinlik", legPri:"Öncelikli", legDn:"Bitti", legMig:"Ertelendi (göreve basılı tutun)", cal:"Takvim", mTasks:"Görevler", phEnt:"Yeni görev ekle... (Enter)", phBr:"Aklına ne gelirse yaz...", rNo:"Tekrarlama", rD:"Her Gün", rW:"Her Hafta", rM:"Her Ay", rY:"Her Yıl", vMo:"Daha Çok (Artırılacaklar)", vLe:"Daha Az (Bırakılacaklar)", vSv:"Hedefleri Kaydet", vUp:"+ Fotoğraf Yükle", vNt:"+ Not (Post-it) Ekle", vBd:"Vizyon Panosu", hAdd:"+ Yeni Alışkanlık Ekle", tMan:"Etiketleri Yönet", tFil:"Filtrele", selTg:"Etiket Seçin...", lAdd:"+ Yeni Liste", kTd:"Yapılacak", kDg:"Devam Eden", kDn:"Tamamlanan", kAdd:"+ Görev Ekle", authH:"⚠️ Lütfen giriş yapın veya kayıt olun.", authEm:"E-Posta Adresi", authPw:"Şifre (Min 6 karakter)", authRg:"Kayıt Ol", authLg:"Giriş Yap", authGmailOnly:"Sadece @gmail.com uzantılı e-posta adresleri geçerlidir.", authReq:"Lütfen e-posta ve şifreyi boş bırakmayın!", authForgot:"Şifremi Unuttum?", authVerifyMsg:"Doğrulama linki gönderildi! Lütfen e-posta kutunuzu kontrol edin.", authResetSent:"Şifre sıfırlama linki e-postanıza gönderildi!", authNotVerified:"Giriş yapmak için lütfen e-postanızı doğrulayın!", authResend:"Yeniden Doğrulama E-postası Gönder", authShowPw:"Göster/Gizle", authInUse:"Bu e-posta adresi zaten kullanımda.", authWeakPw:"Şifre çok zayıf (Min 6 karakter).", sMd:"Görünüm Modu", sLd:"☀️ Gündüz / 🌙 Gece", sTh:"Renk Paleti", sFn:"Yazı Tipi (Font)", sSz:"Yazı Büyüklüğü", sSm:"Küçük", sMed:"Orta", sLg:"Büyük", sDt:"Veri Yönetimi", sEx:"⬇ Dışa Aktar", sIm:"⬆ İçe Yükle", sLn:"Dil Seçeneği", msgMig:"Görev ertelendi! (>)", msgSync:"Senkronizasyon Başarılı!", msgErr:"Hata: Dosya bozuk.", msgEmp:"Kayıt yok.", defH:"Su İç (2 Litre)", tg1:"● Fikir", tg2:"🎨 Tasarım", tg3:"🛒 Alışveriş", mEvt:"Etkinlik Ekle", mDay:"Gün", mDesc:"Açıklama", mRep:"Her Yıl Tekrarla", mSym:"Sembol Değiştir", mNot:"Not / Metin", mTim:"Saat / Alarm 🔔", mTit:"Başlık", mNts:"Notlar", mNam:"Adı", mSch:"Göreve Dönüştür", mDat:"Planlanacak Tarih", mCat:"Yeni Hedef Grubu", mGy:"Yıllık", mGm:"Aylık", mGw:"Haftalık", mGd:"Günlük", mBg:"Arkaplan:", mCol:"Yazı Rengi:", mOut:"🚪 Çıkış Yap", mInf:"Bilgilendirme", mEmp:"Henüz hedef grubu yok.", fS1:"Zarif Minimal", fS2:"Boho Chic", fS3:"Modern Serif", fS4:"Yaratıcı Hikaye", fS5:"Tatlı ve Yuvarlak", fS6:"Klasik Garalde", fS7:"Minimalist", fS8:"Tamamen İş", fS9:"Teknolojik Mono", fS10:"Moda ve Şık", m1:"Oca", m2:"Şub", m3:"Mar", m4:"Nis", m5:"May", m6:"Haz", m7:"Tem", m8:"Ağu", m9:"Eyl", m10:"Eki", m11:"Kas", m12:"Ara", d1:"Pzt", d2:"Sal", d3:"Çar", d4:"Per", d5:"Cum", d6:"Cmt", d7:"Paz", lItm:"+ Madde Ekle", phNewTag:"Yeni Etiket Adı", mRepMo:"Her Ay Tekrarla", mWarn:"Uyarı", mDelHabit:"Bu alışkanlığı silerseniz bütün aylardaki verileriniz silinecektir.<br><br>Devam etmek istiyor musunuz?", mYesDel:"Evet, Sil", mEdit:"Düzenle", mNoDate:"Tarih bulunamadı.", msgSaved:"✔ Kaydedildi", msgNoHabit:"Bu aya ait alışkanlık bulunamadı.", mDateReq:"Tarih?", mRec:"Tekrarlama", mTotHabits:"Toplam Alışkanlık:" },
+    es: { appName:"● Fourly Planner", appDesc:"v2 life os", navIdx:"Índice", navTime:"PLAN DE TIEMPO", navYr:"Anual", navMo:"Mensual", navWk:"Semanal", navDy:"Diario", navMod:"MÓDULOS", navGl:"Metas", navKb:"Tablero", navBr:"Ideas", navVs:"Visión", navHb:"Hábitos", navTg:"Etiquetas", navLs:"Listas", navPr:"Perfil", navSt:"Ajustes", btnBk:"Atrás", btnAdd:"+ Añadir", btnOk:"OK", btnCanc:"Cancelar", btnSav:"Guardar", subIdx:"acceso rápido a módulos", subYr:"eventos futuros y fechas", subMo:"puntos de enfoque y calendario", subWk:"diseño de planificación semanal", subDy:"flujo diario detallado", subGl:"planes anuales y puntos de enfoque", subKb:"gestiona procesos con arrastrar y soltar", subBr:"espacio para despejar la mente", subVs:"sueños, fotos y balance menos/más", subHb:"rastrea tus hábitos", subTg:"etiqueta y filtra tareas", subLs:"listas libres categorizadas", legTsk:"Tarea", legEvt:"Evento", legPri:"Prioridad", legDn:"Hecho", legMig:"Migrado (mantén presionado)", cal:"Calendario", mTasks:"Tareas", phEnt:"Nueva tarea... (Intro)", phBr:"Escribe todo en tu mente...", rNo:"Sin Repetición", rD:"Diario", rW:"Semanal", rM:"Mensual", rY:"Anual", vMo:"Más (Aumentar)", vLe:"Menos (Disminuir)", vSv:"Guardar Metas", vUp:"+ Subir Foto", vNt:"+ Añadir Post-it", vBd:"Tablero de Visión", hAdd:"+ Nuevo Hábito", tMan:"Gestionar Etiquetas", tFil:"Filtrar por Etiqueta", selTg:"Seleccionar Etiqueta...", lAdd:"+ Nueva Lista", kTd:"Por Hacer", kDg:"Haciendo", kDn:"Hecho", kAdd:"+ Añadir Tarea", authH:"⚠️ Por favor, inicie sesión o regístrese.", authEm:"Email", authPw:"Contraseña", authRg:"Registro", authLg:"Entrar", authGmailOnly:"Solo @gmail.com permitidos.", authReq:"¡Rellene los campos!", authForgot:"¿Olvidaste tu contraseña?", authVerifyMsg:"¡Enlace enviado! Revisa tu bandeja.", authResetSent:"¡Enlace de restablecimiento enviado!", authNotVerified:"¡Verifica tu correo!", authResend:"Reenviar correo de verificación", authShowPw:"Mostrar/Ocultar", authInUse:"El correo ya está en uso.", authWeakPw:"La contraseña es demasiado débil.", sMd:"Modo de Apariencia", sLd:"☀️ Día / 🌙 Noche", sTh:"Paleta de Colores", sFn:"Tipografía", sSz:"Tamaño de Fuente", sSm:"Pequeño", sMed:"Medio", sLg:"Grande", sDt:"Gestión de Datos", sEx:"⬇ Exportar", sIm:"⬆ Importar", sLn:"Idioma", msgMig:"¡Tarea migrada! (>)", msgSync:"¡Sincronización exitosa!", msgErr:"Error: Archivo corrupto.", msgEmp:"Sin entradas.", defH:"Beber Agua (2L)", tg1:"● Idea", tg2:"🎨 Diseño", tg3:"🛒 Compras", mEvt:"Añadir Evento", mDay:"Día", mDesc:"Descripción", mRep:"Repetir Anual", mSym:"Cambiar Símbolo", mNot:"Nota / Texto", mTim:"Hora / Alarma 🔔", mTit:"Título", mNts:"Notas", mNam:"Nombre", mSch:"Convertir en Tarea", mDat:"Fecha Programada", mCat:"Nuevo Grupo de Metas", mGy:"Anual", mGm:"Mensual", mGw:"Semanal", mGd:"Diario", mBg:"Fondo:", mCol:"Color de texto:", mOut:"🚪 Salir", mInf:"Información", mEmp:"Aún no hay metas.", fS1:"Elegante Minimalista", fS2:"Boho Chic", fS3:"Serif Moderno", fS4:"Historia Creativa", fS5:"Lindo y Burbujeante", fS6:"Clásico", fS7:"Sans Minimalista", fS8:"Negocios", fS9:"Tecnología", fS10:"Moda", m1:"Ene", m2:"Feb", m3:"Mar", m4:"Abr", m5:"May", m6:"Jun", m7:"Jul", m8:"Ago", m9:"Sep", m10:"Oct", m11:"Nov", m12:"Dic", d1:"Lun", d2:"Mar", d3:"Mié", d4:"Jue", d5:"Vie", d6:"Sáb", d7:"Dom", lItm:"+ Añadir elemento", phNewTag:"Nuevo Nombre de Etiqueta", mRepMo:"Repetir Mensualmente", mWarn:"Aviso", mDelHabit:"Borrar este hábito eliminará los datos de todos los meses.<br><br>¿Continuar?", mYesDel:"Sí, Borrar", mEdit:"Editar", mNoDate:"Fecha no encontrada.", msgSaved:"✔ Guardado", msgNoHabit:"No hay hábitos para este mes.", mDateReq:"¿Fecha?", mRec:"Repetir", mTotHabits:"Hábitos Totales:" },
+    fr: { appName:"● Fourly Planner", appDesc:"v2 life os", navIdx:"Index", navTime:"TEMPS", navYr:"Annuel", navMo:"Mensuel", navWk:"Hebdo", navDy:"Quotidien", navMod:"MODULES", navGl:"Objectifs", navKb:"Tableau", navBr:"Idées", navVs:"Vision", navHb:"Habitudes", navTg:"Tags", navLs:"Listes", navPr:"Profil", navSt:"Paramètres", btnBk:"Retour", btnAdd:"+ Ajouter", btnOk:"OK", btnCanc:"Annuler", btnSav:"Enregistrer", subIdx:"accès rapide aux modules", subYr:"événements et dates", subMo:"points de focus et calendrier", subWk:"planification hebdomadaire", subDy:"flux quotidien", subGl:"plans annuels", subKb:"gérer les processus", subBr:"vider l'esprit", subVs:"rêves, photos et équilibre", subHb:"suivez vos habitudes", subTg:"étiqueter et filtrer", subLs:"listes libres", legTsk:"Tâche", legEvt:"Événement", legPri:"Priorité", legDn:"Fait", legMig:"Migré (maintenir enfoncé)", cal:"Calendrier", mTasks:"Tâches", phEnt:"Nouvelle tâche... (Entrée)", phBr:"Écrivez tout ce qui vous passe par la tête...", rNo:"Sans Répétition", rD:"Quotidien", rW:"Hebdo", rM:"Mensuel", rY:"Annuel", vMo:"Plus (Augmenter)", vLe:"Moins (Diminuer)", vSv:"Enregistrer les Objectifs", vUp:"+ Télécharger une Photo", vNt:"+ Ajouter Post-it", vBd:"Tableau de Vision", hAdd:"+ Nouvelle Habitude", tMan:"Gérer les Tags", tFil:"Filtrer par Tag", selTg:"Sélectionner un Tag...", lAdd:"+ Nouvelle Liste", kTd:"À Faire", kDg:"En Cours", kDn:"Fait", kAdd:"+ Ajouter une Tâche", authH:"⚠️ Connectez-vous ou inscrivez-vous.", authEm:"Email", authPw:"Mot de passe", authRg:"S'inscrire", authLg:"Connexion", authGmailOnly:"Seulement @gmail.com.", authReq:"Veuillez remplir les champs !", authForgot:"Mot de passe oublié ?", authVerifyMsg:"Lien envoyé ! Vérifiez votre boîte.", authResetSent:"Lien de réinitialisation envoyé !", authNotVerified:"Veuillez vérifier votre e-mail !", authResend:"Renvoyer l'e-mail de vérification", authShowPw:"Afficher/Masquer", authInUse:"Email déjà utilisé.", authWeakPw:"Mot de passe trop faible.", sMd:"Mode d'Apparence", sLd:"☀️ Jour / 🌙 Nuit", sTh:"Palette de Couleurs", sFn:"Typographie", sSz:"Taille de Police", sSm:"Petit", sMed:"Moyen", sLg:"Grand", sDt:"Gestion des Données", sEx:"⬇ Exporter", sIm:"⬆ Importer", sLn:"Langue", msgMig:"Tâche migrée ! (>)", msgSync:"Synchronisation réussie !", msgErr:"Error: Fichier corrompu.", msgEmp:"Aucune entrée.", defH:"Boire de l'Eau (2L)", tg1:"● Idée", tg2:"🎨 Design", tg3:"🛒 Shopping", mEvt:"Ajouter un Événement", mDay:"Jour", mDesc:"Description", mRep:"Répéter Annuellement", mSym:"Changer le Symbole", mNot:"Note / Texte", mTim:"Heure / Alarme 🔔", mTit:"Titre", mNts:"Notes", mNam:"Nom", mSch:"Convertir en Tâche", mDat:"Date Programmée", mCat:"Nouveau Groupe", mGy:"Annuel", mGm:"Mensuel", mGw:"Hebdomadaire", mGd:"Quotidien", mBg:"Arrière-plan:", mCol:"Couleur du texte:", mOut:"🚪 Déconnexion", mInf:"Information", mEmp:"Pas d'objectifs.", fS1:"Élégant Minimal", fS2:"Boho Chic", fS3:"Serif Moderne", fS4:"Histoire Créative", fS5:"Mignon", fS6:"Classique", fS7:"Minimaliste", fS8:"Business", fS9:"Tech", fS10:"Mode", m1:"Jan", m2:"Fév", m3:"Mar", m4:"Avr", m5:"Mai", m6:"Juin", m7:"Juil", m8:"Aoû", m9:"Sep", m10:"Oct", m11:"Nov", m12:"Déc", d1:"Lun", d2:"Mar", d3:"Mer", d4:"Jeu", d5:"Ven", d6:"Sam", d7:"Dim", lItm:"+ Ajouter un article", phNewTag:"Nouveau nom de tag", mRepMo:"Répéter Mensuellement", mWarn:"Avertissement", mDelHabit:"Supprimer cette habitude effacera les données de tous les mois.<br><br>Continuer ?", mYesDel:"Oui, Supprimer", mEdit:"Modifier", mNoDate:"Date introuvable.", msgSaved:"✔ Enregistré", msgNoHabit:"Pas d'habitudes pour ce mois.", mDateReq:"Date ?", mRec:"Répéter", mTotHabits:"Habitudes Totales :" },
+    de: { appName:"● Fourly Planner", appDesc:"v2 life os", navIdx:"Index", navTime:"ZEITPLAN", navYr:"Jährlich", navMo:"Monatlich", navWk:"Wöchentlich", navDy:"Täglich", navMod:"MODULE", navGl:"Ziele", navKb:"Projektboard", navBr:"Ideen", navVs:"Vision", navHb:"Gewohnheiten", navTg:"Tags", navLs:"Listen", navPr:"Profil", navSt:"Einstellungen", btnBk:"Zurück", btnAdd:"+ Add", btnOk:"OK", btnCanc:"Abbrechen", btnSav:"Speichern", subIdx:"schnellzugriff auf module", subYr:"zukünftige termine", subMo:"fokus und kalender", subWk:"wochenplanung", subDy:"tagesablauf", subGl:"jahrespläne", subKb:"drag & drop verwaltung", subBr:"raum für gedanken", subVs:"träume, fotos und balance", subHb:"verfolge deine gewohnheiten", subTg:"tags und filter", subLs:"freie listen", legTsk:"Aufgabe", legEvt:"Ereignis", legPri:"Priorität", legDn:"Erledigt", legMig:"Verschoben (gedrückt halten)", cal:"Kalender", mTasks:"Aufgaben", phEnt:"Neue Aufgabe... (Enter)", phBr:"Schreibe alles auf, was dir durch den Kopf geht...", rNo:"Nicht Wiederholen", rD:"Täglich", rW:"Wöchentlich", rM:"Monatlich", rY:"Jährlich", vMo:"Mehr (Erhöhen)", vLe:"Weniger (Reduzieren)", vSv:"Ziele Speichern", vUp:"+ Foto Hochladen", vNt:"+ Post-it Hinzufügen", vBd:"Vision Board", hAdd:"+ Neue Gewohnheit", tMan:"Tags Verwalten", tFil:"Nach Tag Filtern", selTg:"Tag Auswählen...", lAdd:"+ Neue Liste", kTd:"Zu Tun", kDg:"In Arbeit", kDn:"Erledigt", kAdd:"+ Aufgabe Hinzufügen", authH:"⚠️ Bitte melden Sie sich an oder registrieren Sie sich.", authEm:"E-Mail-Adresse", authPw:"Passwort (Min 6 Zeichen)", authRg:"Registrieren", authLg:"Anmelden", authGmailOnly:"Nur @gmail.com erlaubt.", authReq:"Bitte alle Felder ausfüllen!", authForgot:"Passwort vergessen?", authVerifyMsg:"Link gesendet! Posteingang prüfen.", authResetSent:"Passwort-Reset-Link gesendet!", authNotVerified:"Bitte bestätigen Sie Ihre E-Mail!", authResend:"E-Mail erneut senden", authShowPw:"Anzeigen/Verbergen", authInUse:"E-Mail wird bereits verwendet.", authWeakPw:"Passwort ist zu schwach.", sMd:"Erscheinungsbild", sLd:"☀️ Tag / 🌙 Nacht", sTh:"Farbpalette", sFn:"Typografie", sSz:"Schriftgröße", sSm:"Klein", sMed:"Mittel", sLg:"Groß", sDt:"Datenverwaltung", sEx:"⬇ Exportieren", sIm:"⬆ Importieren", sLn:"Sprache", msgMig:"Aufgabe verschoben! (>)", msgSync:"Erfolgreich synchronisiert!", msgErr:"Fehler: Datei beschädigt.", msgEmp:"Keine Einträge.", defH:"Wasser trinken (2L)", tg1:"● Idee", tg2:"🎨 Design", tg3:"🛒 Einkaufen", mEvt:"Ereignis Hinzufügen", mDay:"Tag", mDesc:"Beschreibung", mRep:"Jährlich Wiederholen", mSym:"Symbol Ändern", mNot:"Notiz / Text", mTim:"Zeit / Alarm 🔔", mTit:"Titel", mNts:"Notizen", mNam:"Name", mSch:"In Aufgabe umwandeln", mDat:"Geplantes Datum", mCat:"Neue Zielgruppe", mGy:"Jährlich", mGm:"Monatlich", mGw:"Wöchentlich", mGd:"Täglich", mBg:"Hintergrund:", mCol:"Textfarbe:", mOut:"🚪 Abmelden", mInf:"Information", mEmp:"Noch keine Ziele.", fS1:"Elegant Minimal", fS2:"Boho Chic", fS3:"Modern Serif", fS4:"Kreative Geschichte", fS5:"Süß & Rund", fS6:"Klassisch", fS7:"Minimalist", fS8:"Business", fS9:"Technik", fS10:"Mode", m1:"Jan", m2:"Feb", m3:"Mär", m4:"Apr", m5:"Mai", m6:"Jun", m7:"Jul", m8:"Aug", m9:"Sep", m10:"Okt", m11:"Nov", m12:"Dez", d1:"Mon", d2:"Die", d3:"Mit", d4:"Don", d5:"Fre", d6:"Sam", d7:"Son", lItm:"+ Element hinzufügen", phNewTag:"Neuer Tag-Name", mRepMo:"Monatlich Wiederholen", mWarn:"Warnung", mDelHabit:"Das Löschen entfernt Daten aus allen Monaten.<br><br>Fortfahren?", mYesDel:"Ja, Löschen", mEdit:"Bearbeiten", mNoDate:"Datum nicht gefunden.", msgSaved:"✔ Gespeichert", msgNoHabit:"Keine Gewohnheiten für diesen Monat.", mDateReq:"Datum?", mRec:"Wiederholen", mTotHabits:"Gesamte Gewohnheiten:" },
+    it: { appName:"● Fourly Planner", appDesc:"v2 life os", navIdx:"Indice", navTime:"TEMPO", navYr:"Annuale", navMo:"Mensile", navWk:"Settimanale", navDy:"Quotidiano", navMod:"MODULI", navGl:"Obiettivi", navKb:"Bacheca", navBr:"Idee", navVs:"Visione", navHb:"Abitudini", navTg:"Tag", navLs:"Liste", navPr:"Profilo", navSt:"Impostazioni", btnBk:"Indietro", btnAdd:"+ Aggiungi", btnOk:"OK", btnCanc:"Annulla", btnSav:"Salva", subIdx:"accesso rapido ai moduli", subYr:"evento e date future", subMo:"focus e calendario", subWk:"pianificazione settimanale", subDy:"flusso giornaliero dettagliato", subGl:"piani annuali e focus", subKb:"gestisci processi con drag & drop", subBr:"spazio per liberare la mente", subVs:"sogni, foto e bilanciamento", subHb:"traccia le abitudini", subTg:"etichetta e filtra attività", subLs:"liste libere categorizzate", legTsk:"Attività", legEvt:"Evento", legPri:"Priorità", legDn:"Fatto", legMig:"Migrato (tieni premuto)", cal:"Calendario", mTasks:"Attività", phEnt:"Nuova attività... (Invio)", phBr:"Scrivi tutto ciò che hai in mente...", rNo:"Nessuna Ripetizione", rD:"Quotidiano", rW:"Settimanale", rM:"Mensile", rY:"Annuale", vMo:"Più (Aumenta)", vLe:"Meno (Riduci)", vSv:"Salva Obiettivi", vUp:"+ Carica Foto", vNt:"+ Aggiungi Post-it", vBd:"Bacheca Visione", hAdd:"+ Nuova Abitudine", tMan:"Gestisci Tag", tFil:"Filtra per Tag", selTg:"Seleziona Tag...", lAdd:"+ Nuova Lista", kTd:"Da Fare", kDg:"In Corso", kDn:"Fatto", kAdd:"+ Aggiungi Attività", authH:"⚠️ Accedi o registrati.", authEm:"Indirizzo Email", authPw:"Password (Min 6 car.)", authRg:"Registrati", authLg:"Accedi", authGmailOnly:"Solo indirizzi @gmail.com.", authReq:"Completa tutti i campi!", authForgot:"Password dimenticata?", authVerifyMsg:"Link inviato! Controlla la posta.", authResetSent:"Link di ripristino inviato!", authNotVerified:"Verifica la tua email!", authResend:"Invia di nuovo email", authShowPw:"Mostra/Nascondi", authInUse:"Email già in uso.", authWeakPw:"Password troppo debole.", sMd:"Modalità", sLd:"☀️ Giorno / 🌙 Notte", sTh:"Palette Colori", sFn:"Tipografia", sSz:"Dimensione Carattere", sSm:"Piccolo", sMed:"Medio", sLg:"Grande", sDt:"Gestione Dati", sEx:"⬇ Esporta", sIm:"⬆ Importa", sLn:"Lingua", msgMig:"Attività migrata! (>)", msgSync:"Sincronizzazione completata!", msgErr:"Errore: File corrotto.", msgEmp:"Nessun elemento.", defH:"Bevi Acqua (2L)", tg1:"● Idea", tg2:"🎨 Design", tg3:"🛒 Shopping", mEvt:"Aggiungi Evento", mDay:"Giorno", mDesc:"Descrizione", mRep:"Ripeti Annualmente", mSym:"Cambia Simbolo", mNot:"Nota / Testo", mTim:"Ora / Sveglia 🔔", mTit:"Título", mNts:"Note", mNam:"Nome", mSch:"Converti in Attività", mDat:"Data Programmata", mCat:"Nuovo Gruppo", mGy:"Annuale", mGm:"Mensile", mGw:"Settimanale", mGd:"Quotidiano", mBg:"Sfondo:", mCol:"Colore Testo:", mOut:"🚪 Esci", mInf:"Informazioni", mEmp:"Nessun gruppo di obiettivi.", fS1:"Elegante Minimal", fS2:"Boho Chic", fS3:"Serif Moderno", fS4:"Storia Creativa", fS5:"Carino e Rotondo", fS6:"Classico", fS7:"Minimalista", fS8:"Business", fS9:"Tech Mono", fS10:"Moda", m1:"Gen", m2:"Feb", m3:"Mar", m4:"Apr", m5:"Mag", m6:"Giu", m7:"Lug", m8:"Ago", m9:"Set", m10:"Ott", m11:"Nov", m12:"Dic", d1:"Lun", d2:"Mar", d3:"Mer", d4:"Gio", d5:"Ven", d6:"Sab", d7:"Dom", lItm:"+ Aggiungi Elemento", phNewTag:"Nuovo Tag", mRepMo:"Ripeti Mensilmente", mWarn:"Avviso", mDelHabit:"Cancellare questa abitudine eliminerà i dati di tutti i mesi.<br><br>Continuare?", mYesDel:"Sì, Elimina", mEdit:"Modifica", mNoDate:"Data non trovata.", msgSaved:"✔ Salvato", msgNoHabit:"Nessuna abitudine per questo mese.", mDateReq:"Data?", mRec:"Ripetizione", mTotHabits:"Abitudini Totali:" },
+    pt: { appName:"● Fourly Planner", appDesc:"v2 life os", navIdx:"Índice", navTime:"TEMPO", navYr:"Anual", navMo:"Mensal", navWk:"Semanal", navDy:"Diário", navMod:"MÓDULOS", navGl:"Metas", navKb:"Quadro", navBr:"Ideias", navVs:"Visão", navHb:"Hábitos", navTg:"Tags", navLs:"Listas", navPr:"Perfil", navSt:"Configurações", btnBk:"Voltar", btnAdd:"+ Adicionar", btnOk:"OK", btnCanc:"Cancelar", btnSav:"Salvar", subIdx:"acceso rápido aos módulos", subYr:"eventos futuros e datas", subMo:"pontos de foco e calendário", subWk:"planejamento semanal", subDy:"fluxo diário", subGl:"planos anuais", subKb:"gerenciar processos", subBr:"espaço mental", subVs:"sonhos, fotos e equilíbrio", subHb:"monitore seus hábitos", subTg:"tags e filtros", subLs:"listas livres", legTsk:"Tarefa", legEvt:"Evento", legPri:"Prioridade", legDn:"Feito", legMig:"Migrado (mantenha pressionado)", cal:"Calendário", mTasks:"Tarefas", phEnt:"Nova tarefa... (Enter)", phBr:"Escreva tudo o que vier à mente...", rNo:"Não Repetir", rD:"Diário", rW:"Semanal", rM:"Mensal", rY:"Anual", vMo:"Mais (Aumentar)", vLe:"Menos (Diminuir)", vSv:"Salvar Metas", vUp:"+ Enviar Foto", vNt:"+ Adicionar Post-it", vBd:"Quadro de Visão", hAdd:"+ Novo Hábito", tMan:"Gerenciar Tags", tFil:"Filtrar por Tag", selTg:"Selecionar Tag...", lAdd:"+ Nova Lista", kTd:"A Fazer", kDg:"Fazendo", kDn:"Feito", kAdd:"+ Adicionar Tarefa", authH:"⚠️ Faça login ou registre-se.", authEm:"Endereço de Email", authPw:"Senha (Min 6 carac.)", authRg:"Registrar", authLg:"Entrar", authGmailOnly:"Apenas @gmail.com permitido.", authReq:"Preencha os campos!", authForgot:"Esqueceu a senha?", authVerifyMsg:"Link enviado! Verifique sua caixa.", authResetSent:"Link de redefinição enviado!", authNotVerified:"Verifique seu e-mail primeiro!", authResend:"Reenviar e-mail de verificação", authShowPw:"Mostrar/Ocultar", authInUse:"E-mail já em uso.", authWeakPw:"Senha muito fraca.", sMd:"Modo de Aparência", sLd:"☀️ Dia / 🌙 Noite", sTh:"Paleta de Cores", sFn:"Tipografia", sSz:"Tamanho da Fonte", sSm:"Pequeno", sMed:"Médio", sLg:"Grande", sDt:"Gestão de Datos", sEx:"⬇ Exportar", sIm:"⬆ Importar", sLn:"Idioma", msgMig:"Tarefa migrada! (>)", msgSync:"Sincronização concluída!", msgErr:"Erro: Arquivo corrompido.", msgEmp:"Sem registros.", defH:"Beber Água (2L)", tg1:"● Ideia", tg2:"🎨 Desenho", tg3:"🛒 Compras", mEvt:"Adicionar Evento", mDay:"Dia", mDesc:"Descrição", mRep:"Repetir Anualmente", mSym:"Mudar Símbolo", mNot:"Nota / Texto", mTim:"Hora / Alarme 🔔", mTit:"Título", mNts:"Notas", mNam:"Nome", mSch:"Converter em Tarefa", mDat:"Data Agendada", mCat:"Novo Grupo", mGy:"Anual", mGm:"Mensal", mGw:"Semanal", mGd:"Diário", mBg:"Fundo:", mCol:"Cor do texto:", mOut:"🚪 Sair", mInf:"Informação", mEmp:"Ainda não há metas.", fS1:"Elegante", fS2:"Boho Chic", fS3:"Serif Moderno", fS4:"História Criativa", fS5:"Fofo", fS6:"Clássico", fS7:"Minimalista", fS8:"Negócios", fS9:"Tecnologia", fS10:"Moda", m1:"Jan", m2:"Fev", m3:"Mar", m4:"Abr", m5:"Mai", m6:"Jun", m7:"Jul", m8:"Ago", m9:"Set", m10:"Out", m11:"Nov", m12:"Dez", d1:"Seg", d2:"Ter", d3:"Qua", d4:"Qui", d5:"Sex", d6:"Sáb", d7:"Dom", lItm:"+ Adicionar item", phNewTag:"Nova Tag", mRepMo:"Repetir Mensalmente", mWarn:"Aviso", mDelHabit:"Excluir apagará os dados de todos os meses.<br><br>Continuar?", mYesDel:"Sim, Excluir", mEdit:"Editar", mNoDate:"Data não encontrada.", msgSaved:"✔ Salvo", msgNoHabit:"Nenhum hábito para este mês.", mDateReq:"Data?", mRec:"Repetir", mTotHabits:"Hábitos Totais:" },
+    ru: { appName:"● Fourly Planner", appDesc:"v2 life os", navIdx:"Индекс", navTime:"ВРЕМЯ", navYr:"Год", navMo:"Месяц", navWk:"Неделя", navDy:"День", navMod:"МОДУЛИ", navGl:"Цели", navKb:"Проекты", navBr:"Идеи", navVs:"Видение", navHb:"Привычки", navTg:"Теги", navLs:"Списки", navPr:"Профиль", navSt:"Настройки", btnBk:"Назад", btnAdd:"+ Добавить", btnOk:"ОК", btnCanc:"Отмена", btnSav:"Сохранить", subIdx:"быстрый доступ к модулям", subYr:"будущие события", subMo:"фокус и календарь", subWk:"планирование недели", subDy:"расписание на день", subGl:"цели и планы", subKb:"управление процессами", subBr:"место для мыслей", subVs:"мечты, фото и баланс", subHb:"отслеживание привычек", subTg:"теги и фильтры", subLs:"свободные списки", legTsk:"Задача", legEvt:"Событие", legPri:"Важно", legDn:"Готово", legMig:"Перенесено (удерживайте задачу)", cal:"Календарь", mTasks:"Задачи", phEnt:"Новая задача... (Enter)", phBr:"Напишите всё, что у вас на уме...", rNo:"Не повторять", rD:"Ежедневно", rW:"Еженедельно", rM:"Ежемесячно", rY:"Ежегодно", vMo:"Больше (Увеличить)", vLe:"Меньше (Уменьшить)", vSv:"Сохранить цели", vUp:"+ Загрузить фото", vNt:"+ Добавить стикер", vBd:"Доска Видения", hAdd:"+ Новая привычка", tMan:"Управление тегами", tFil:"Фильтр по тегу", selTg:"Выбрать тег...", lAdd:"+ Новый список", kTd:"Сделать", kDg:"В процессе", kDn:"Готово", kAdd:"+ Добавить задачу", authH:"⚠️ Пожалуйста, войдите или зарегистрируйтесь.", authEm:"Email адрес", authPw:"Пароль (мин. 6 симв.)", authRg:"Регистрация", authLg:"Войти", authGmailOnly:"Разрешены только адреса @gmail.com.", authReq:"Заполните все поля!", authForgot:"Забыли пароль?", authVerifyMsg:"Ссылка отправлена! Проверьте почту.", authResetSent:"Ссылка для сброса отправлена!", authNotVerified:"Подтвердите ваш e-mail!", authResend:"Отправить письмо еще раз", authShowPw:"Показать/Скрыть", authInUse:"Email уже используется.", authWeakPw:"Слишком слабый пароль.", sMd:"Режим", sLd:"☀️ День / 🌙 Ночь", sTh:"Цветовая палитра", sFn:"Шрифт", sSz:"Размер шрифта", sSm:"Маленький", sMed:"Средний", sLg:"Большой", sDt:"Управление данными", sEx:"⬇ Экспорт", sIm:"⬆ Импорт", sLn:"Язык", msgMig:"Задача перенесена! (>)", msgSync:"Синхронизация успешна!", msgErr:"Ошибка: Файл поврежден.", msgEmp:"Нет записей.", defH:"Пить воду (2л)", tg1:"● Идея", tg2:"🎨 Дизайн", tg3:"🛒 Покупки", mEvt:"Добавить событие", mDay:"День", mDesc:"Описание", mRep:"Повторять ежегодно", mSym:"Изменить символ", mNot:"Заметка / Текст", mTim:"Время / Будильник 🔔", mTit:"Заголовок", mNts:"Заметки", mNam:"Имя", mSch:"Превратить в задачу", mDat:"Запланированная дата", mCat:"Новая группа", mGy:"Ежегодно", mGm:"Ежемесячно", mGw:"Еженедельно", mGd:"Ежедневно", mBg:"Фон:", mCol:"Цвет текста:", mOut:"🚪 Выйти", mInf:"Информация", mEmp:"Пока нет целей.", fS1:"Элегантный", fS2:"Boho Шик", fS3:"Современный Сериф", fS4:"Креативный", fS5:"Милый", fS6:"Классический", fS7:"Минималист", fS8:"Бизнес", fS9:"Техно", fS10:"Мода", m1:"Янв", m2:"Фев", m3:"Мар", m4:"Апр", m5:"Май", m6:"Июн", m7:"Июл", m8:"Авг", m9:"Сен", m10:"Окт", m11:"Ноя", m12:"Дек", d1:"Пнд", d2:"Втр", d3:"Срд", d4:"Чтв", d5:"Птн", d6:"Сбт", d7:"Вск", lItm:"+ Добавить элемент", phNewTag:"Новое имя тега", mRepMo:"Повторять Ежемесячно", mWarn:"Предупреждение", mDelHabit:"Удаление сотрет данные за все месяцы.<br><br>Продолжить?", mYesDel:"Да, Удалить", mEdit:"Редактировать", mNoDate:"Дата не найдена.", msgSaved:"✔ Сохранено", msgNoHabit:"Нет привычек на этот месяц.", mDateReq:"Дата?", mRec:"Повторять", mTotHabits:"Всего Привычек:" },
+    ja: { appName:"● Fourly Planner", appDesc:"v2 life os", navIdx:"インデックス", navTime:"スケジュール", navYr:"年間", navMo:"月間", navWk:"週間", navDy:"日間", navMod:"モジュール", navGl:"目標", navKb:"プロジェクト", navBr:"アイデア", navVs:"ビジョン", navHb:"習慣", navTg:"タグ", navLs:"リスト", navPr:"プロフィール", navSt:"設定", btnBk:"戻る", btnAdd:"+ 追加", btnOk:"OK", btnCanc:"キャンセル", btnSav:"保存", subIdx:"モジュールへのクイックアクセス", subYr:"将来のイベントと日付", subMo:"フォーカスとカレンダー", subWk:"週間計画", subDy:"毎日の流れ", subGl:"年間計画と目標", subKb:"ドラッグ＆ドロップで管理", subBr:"頭の中を整理する", subVs:"夢、写真、バランス", subHb:"習慣を記録する", subTg:"タグ付けと絞り込み", subLs:"自由なリスト", legTsk:"タスク", legEvt:"イベント", legPri:"優先", legDn:"完了", legMig:"移行済み（タスクを長押し）", cal:"カレンダー", mTasks:"タスク", phEnt:"新しいタスク... (Enter)", phBr:"頭の中のすべてを書き出す...", rNo:"繰り返さない", rD:"毎日", rW:"毎週", rM:"毎月", rY:"毎年", vMo:"増やす", vLe:"減らす", vSv:"目標を保存", vUp:"+ 写真をアップロード", vNt:"+ 付箋を追加", vBd:"ビジョンボード", hAdd:"+ 新しい習慣", tMan:"タグ管理", tFil:"タグで絞り込み", selTg:"タグを選択...", lAdd:"+ 新規リスト", kTd:"未対応", kDg:"対応中", kDn:"完了", kAdd:"+ タスクを追加", authH:"⚠️ ログインまたは登録してください。", authEm:"メールアドレス", authPw:"パスワード (6文字以上)", authRg:"登録", authLg:"ログイン", authGmailOnly:"@gmail.comのみ有効です。", authReq:"すべての項目を入力してください！", authForgot:"パスワードを忘れましたか？", authVerifyMsg:"確認メールを送信しました！", authResetSent:"リセットリンクを送信しました！", authNotVerified:"メール認証を完了してください！", authResend:"確認メールを再送信", authShowPw:"表示/非表示", authInUse:"このメールは既に使用されています。", authWeakPw:"パスワードが弱すぎます。", sMd:"外観モード", sLd:"☀️ 昼 / 🌙 夜", sTh:"カラーパレット", sFn:"フォント", sSz:"文字サイズ", sSm:"小", sMed:"中", sLg:"大", sDt:"データ管理", sEx:"⬇ エクスポート", sIm:"⬆ インポート", sLn:"言語", msgMig:"タスクを移行しました！ (>)（タスクを長押し）", msgSync:"同期成功！", msgErr:"エラー: ファイルが破損しています。", msgEmp:"データなし", defH:"水を飲む (2L)", tg1:"● アイデア", tg2:"🎨 デザイン", tg3:"🛒 買い物", mEvt:"イベント追加", mDay:"日", mDesc:"説明", mRep:"毎年繰り返す", mSym:"シンボル変更", mNot:"メモ / テキスト", mTim:"時間 / アラーム 🔔", mTit:"タイトル", mNts:"メモ", mNam:"名前", mSch:"タスクに変換", mDat:"予定日", mCat:"新しいグループ", mGy:"年間", mGm:"月間", mGw:"週間", mGd:"日間", mBg:"背景:", mCol:"文字色:", mOut:"🚪 ログアウト", mInf:"情報", mEmp:"まだ目標がありません。", fS1:"エレガント", fS2:"ボヘミアン", fS3:"モダンセリフ", fS4:"クリエイティブ", fS5:"キュート", fS6:"クラシック", fS7:"ミニマリスト", fS8:"ビジネス", fS9:"テック", fS10:"ファッション", m1:"1月", m2:"2月", m3:"3月", m4:"4月", m5:"5月", m6:"6月", m7:"7月", m8:"8月", m9:"9月", m10:"10月", m11:"11月", m12:"12月", d1:"月", d2:"火", d3:"水", d4:"木", d5:"金", d6:"土", d7:"日", lItm:"+ アイテムを追加", phNewTag:"新しいタグ名", mRepMo:"毎月繰り返す", mWarn:"警告", mDelHabit:"すべての月のデータが消去されます。<br><br>続行しますか？", mYesDel:"はい、削除します", mEdit:"編集", mNoDate:"日付が見つかりません。", msgSaved:"✔ 保存しました", msgNoHabit:"今月の習慣はありません。", mDateReq:"日付？", mRec:"繰り返し", mTotHabits:"総習慣数:" },
+    zh: { appName:"● Fourly Planner", appDesc:"v2 life os", navIdx:"索引", navTime:"时间计划", navYr:"年度", navMo:"月度", navWk:"每周", navDy:"每日", navMod:"模块", navGl:"目标", navKb:"项目板", navBr:"灵感", navVs:"愿景板", navHb:"习惯", navTg:"标签", navLs:"列表", navPr:"个人资料", navSt:"设置", btnBk:"返回", btnAdd:"+ 添加", btnOk:"确定", btnCanc:"取消", btnSav:"保存", subIdx:"快速访问模块", subYr:"未来事件和日期", subMo:"重点和日历", subWk:"每周计划布局", subDy:"详细的每日流程", subGl:"年度计划和重点", subKb:"拖放管理流程", subBr:"清理头脑空间", subVs:"梦想、照片和平衡", subHb:"追踪你的习惯", subTg:"标签和过滤任务", subLs:"分类自由列表", legTsk:"任务", legEvt:"事件", legPri:"优先级", legDn:"完成", legMig:"已迁移（长按任务）", cal:"日历", mTasks:"任务", phEnt:"添加新任务... (Enter)", phBr:"写下你脑海中的一切...", rNo:"不重复", rD:"每天", rW:"每周", rM:"每月", rY:"每年", vMo:"更多（增加）", vLe:"更少（减少）", vSv:"保存目标", vUp:"+ 上传照片", vNt:"+ 添加便签", vBd:"愿景板", hAdd:"+ 新习惯", tMan:"管理标签", tFil:"按标签筛选", selTg:"选择标签...", lAdd:"+ 新建列表", kTd:"待办", kDg:"进行中", kDn:"已完成", kAdd:"+ 添加任务", authH:"⚠️ 请登录或注册。", authEm:"电子邮件地址", authPw:"密码（最少6个字符）", authRg:"注册", authLg:"登录", authGmailOnly:"仅允许 @gmail.com 邮箱。", authReq:"请勿留空！", authForgot:"忘记密码？", authVerifyMsg:"验证链接已发送！请检查邮箱。", authResetSent:"重置链接已发送！", authNotVerified:"请先验证邮箱！", authResend:"重新发送验证邮件", authShowPw:"显示/隐藏", authInUse:"邮箱已被使用。", authWeakPw:"密码太弱。", sMd:"外观模式", sLd:"☀️ 日 / 🌙 夜", sTh:"调色板", sFn:"字体", sSz:"字体大小", sSm:"小", sMed:"中", sLg:"大", sDt:"数据管理", sEx:"⬇ 导出", sIm:"⬆ 导入", sLn:"语言", msgMig:"任务已迁移！(>)（长按任务）", msgSync:"同步成功！", msgErr:"错误：文件已损坏。", msgEmp:"没有记录。", defH:"喝水 (2L)", tg1:"● 想法", tg2:"🎨 设计", tg3:"🛒 购物", mEvt:"添加事件", mDay:"日", mDesc:"描述", mRep:"每年重复", mSym:"更改符号", mNot:"笔记/文本", mTim:"时间/闹钟 🔔", mTit:"标题", mNts:"笔记", mNam:"名称", mSch:"转换为任务", mDat:"预定日期", mCat:"新目标组", mGy:"年度", mGm:"月度", mGw:"每周", mGd:"每日", mBg:"背景:", mCol:"文本颜色:", mOut:"🚪 退出", mInf:"信息", mEmp:"还没有目标。", fS1:"优雅", fS2:"波西米亚", fS3:"现代衬线", fS4:"创意", fS5:"可爱", fS6:"经典", fS7:"极简", fS8:"商业", fS9:"科技", fS10:"时尚", m1:"一月", m2:"二月", m3:"三月", m4:"四月", m5:"五月", m6:"六月", m7:"七月", m8:"八月", m9:"九月", m10:"十月", m11:"十一月", m12:"十二月", d1:"一", d2:"二", d3:"三", d4:"四", d5:"五", d6:"六", d7:"日", lItm:"+ 添加项目", phNewTag:"新标签名称", mRepMo:"每月重复", mWarn:"警告", mDelHabit:"将清除所有月份的数据。<br><br>是否继续？", mYesDel:"是，删除", mEdit:"编辑", mNoDate:"未找到日期。", msgSaved:"✔ 已保存", msgNoHabit:"本月没有习惯。", mDateReq:"日期？", mRec:"重复", mTotHabits:"总习惯数:" }
+  };
+
+  let currentLang = 'en'; 
+  function t(key) { return (i18n[currentLang] && i18n[currentLang][key]) || i18n['en'][key] || key; }
+
+  function applyTranslations() {
+    document.querySelectorAll('[data-i18n]').forEach(el => el.textContent = t(el.getAttribute('data-i18n')));
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => el.placeholder = t(el.getAttribute('data-i18n-ph')));
+    
+    // Üst bar tarihini anlık dile göre güncelleyen eklenti
+    const topbarDateEl = document.getElementById('topbar-date');
+    if (topbarDateEl) {
+      topbarDateEl.textContent = today.toLocaleDateString(currentLang, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    // Profil isminin çeviri motoru tarafından ezilmesini önleyen akıllı kontrol
+    const profBtn = document.getElementById('sidebar-profile-name');
+    if (profBtn) {
+      const activeUser = firebase.auth().currentUser || currentUser;
+      if (activeUser) {
+        profBtn.textContent = activeUser.displayName || activeUser.email.split('@')[0];
+      } else {
+        profBtn.textContent = t('navPr');
+      }
+    }
+
+    let mapTitle = { 'index': t('navIdx'), 'yearly': t('navYr'), 'monthly': t('navMo'), 'weekly': t('navWk'), 'daily': t('navDy'), 'kanban': t('navKb'), 'brain': t('navBr'), 'habits': t('navHb'), 'tags': t('navTg'), 'lists': t('navLs'), 'goals': t('navGl'), 'vision': t('navVs') };
+    document.getElementById('panel-title').textContent = mapTitle[currentPanel] || currentPanel;
+    updateTagSelects();
+
+    // ── WINDOWS ÇUBUĞU DİL SENKRONİZASYONU ──
+    if (window.require) {
+      try {
+        const { ipcRenderer } = window.require('electron');
+        ipcRenderer.send('change-native-menu-lang', currentLang);
+      } catch(e) { console.log("Electron IPC es geçildi."); }
+    }
+  }
+
+  // FIREBASE INIT
+  const firebaseConfig = {
+    apiKey: "AIzaSyDlvfbVohML-ctIxfV0bQGtP2DLGi8Uclw",
+    authDomain: "fourly-planner.firebaseapp.com",
+    databaseURL: "https://fourly-planner-default-rtdb.firebaseio.com",
+    projectId: "fourly-planner",
+    storageBucket: "fourly-planner.firebasestorage.app",
+    messagingSenderId: "40997899772",
+    appId: "1:40997899772:web:c6c21594d75a36bf88f679"
+  };
+
+  if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+  const db = firebase.database(); let currentUser = null; let dbRef = null;
+
+  firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+          if (!user.emailVerified) {
+              firebase.auth().signOut();
+              currentUser = null;
+              document.getElementById('auth-modal').style.display = 'flex';
+              return;
+          }
+          
+          currentUser = user; 
+          document.getElementById('auth-modal').style.display = 'none'; 
+          
+          const profileName = user.displayName || user.email.split('@')[0];
+          const profBtn = document.getElementById('sidebar-profile-name');
+          if(profBtn) { profBtn.textContent = profileName; }
+          
+          dbRef = db.ref(`users/${user.uid}/fourly_data`);
+          dbRef = db.ref(`users/${user.uid}/fourly_data`);
+          dbRef.on('value', (snapshot) => {
+              const cloudData = snapshot.val();
+              if (cloudData) {
+                  for (let key in cloudData) {
+                      try {
+                          let val = cloudData[key];
+                          const strVal = (typeof val === 'string') ? val : JSON.stringify(val);
+                          localStorage.setItem(key, strVal);
+                      } catch(e){}
+                  }
+                  // Eski sürümlerden kalan hayalet Almanca anahtarını temizleme temizliği
+                  if(localStorage.getItem('bujo_bujo_lang')) {
+                      localStorage.removeItem('bujo_bujo_lang');
+                  }
+                  currentLang = load('lang', 'en');
+                  applyTranslations();
+                  if (typeof refreshCurrentPanel === "function") refreshCurrentPanel();
+              }
+          });
+      } else {
+          currentUser = null;
+          document.getElementById('auth-modal').style.display = 'flex'; 
+          applyTranslations();
+          if(dbRef) dbRef.off();
+      }
+  });
+
+  function togglePassword() { const p = document.getElementById('auth-password'); p.type = p.type === 'password' ? 'text' : 'password'; }
+  
+  function showAuthError(err) {
+      let msg = "Error occurred!";
+      if (typeof err === 'string') {
+          msg = t(err) !== err ? t(err) : err; 
+      } else if (err && err.message) {
+          msg = err.message;
+          if (err.code in ['auth/invalid-credential', 'auth/invalid-login-credentials', 'auth/user-not-found', 'auth/wrong-password', 'auth/invalid-email']) {
+              msg = t('authH');
+          } else if (err.code === 'auth/email-already-in-use') {
+              msg = "Email already in use!";
+          } else if (err.code === 'auth/weak-password') {
+              msg = "Şifre çok zayıf (Min 6 karakter).";
+          }
+      }
+      const errEl = document.getElementById('auth-error'); 
+      if(errEl) { errEl.textContent = msg; errEl.style.display = 'block'; } else { alert(msg); }
+  }
+  
+  function registerUser() {
+      const email = document.getElementById('auth-email').value.trim(); 
+      const pass = document.getElementById('auth-password').value.trim();
+      if (!email || !pass) return openModal('alert', t('authReq'));
+
+      if (!email.toLowerCase().endsWith('@gmail.com')) {
+          const errEl = document.getElementById('auth-error');
+          errEl.textContent = t('authGmailOnly');
+          errEl.style.display = 'block';
+          return;
+      }
+
+      firebase.auth().createUserWithEmailAndPassword(email, pass).then((userCredential) => {
+          userCredential.user.sendEmailVerification().then(() => {
+              openModal('alert', t('authVerifyMsg'));
+              document.getElementById('auth-error').style.display = 'none';
+          });
+      }).catch(err => handleFirebaseErrors(err));
+  }
+  
+  function loginUser() {
+      const email = document.getElementById('auth-email').value.trim(); 
+      const pass = document.getElementById('auth-password').value.trim();
+      if (!email || !pass) return openModal('alert', t('authReq'));
+
+      firebase.auth().signInWithEmailAndPassword(email, pass).then((userCredential) => {
+          if (!userCredential.user.emailVerified) {
+              firebase.auth().signOut();
+              const errEl = document.getElementById('auth-error');
+              errEl.textContent = t('authNotVerified');
+              errEl.style.display = 'block';
+              document.getElementById('resend-verify-link').style.display = 'block';
+              return;
+          }
+      }).catch(err => handleFirebaseErrors(err));
+  }
+  
+  function resendVerification() {
+      const email = document.getElementById('auth-email').value.trim();
+      const pass = document.getElementById('auth-password').value.trim();
+      firebase.auth().signInWithEmailAndPassword(email, pass).then((userCredential) => {
+          userCredential.user.sendEmailVerification().then(() => {
+              openModal('alert', t('authVerifyMsg'));
+              firebase.auth().signOut();
+          });
+      }).catch(err => handleFirebaseErrors(err));
+  }
+  
+  function forgotPassword() {
+      const email = document.getElementById('auth-email').value.trim();
+      if (!email) return openModal('alert', t('authEm') + "?");
+      firebase.auth().sendPasswordResetEmail(email).then(() => {
+          openModal('alert', t('authResetSent'));
+      }).catch(err => handleFirebaseErrors(err));
+  }
+  
+  function logoutUser() {
+      firebase.auth().signOut().then(() => {
+          const protectedKeys = ['bujo_lang', 'bujo_app_theme', 'bujo_app_mode', 'bujo_app_font', 'bujo_app_fontsize'];
+          for (let i = localStorage.length - 1; i >= 0; i--) {
+              const key = localStorage.key(i);
+              if (key.startsWith('bujo_') && !protectedKeys.includes(key)) {
+                  localStorage.removeItem(key);
+              }
+          }
+          location.reload();
+      });
+}
+
+  function handleFirebaseErrors(error) {
+      console.error("Firebase Auth Error:", error.code);
+      switch (error.code) {
+          case 'auth/invalid-login-credentials':
+          case 'auth/user-not-found':
+          case 'auth/wrong-password':
+          case 'auth/invalid-email':
+              showAuthError('authH');
+              break;
+          case 'auth/email-already-in-use':
+              showAuthError('Bu e-posta adresi zaten kullanımda.'); 
+              break;
+          case 'auth/weak-password':
+              showAuthError('Şifre çok zayıf (Min 6 karakter).');
+              break;
+          default:
+              showAuthError(error.message);
+      }
+  }
+
+  function save(key, val) { try { const strValue = JSON.stringify(val); const localKey = 'bujo_' + key; localStorage.setItem(localKey, strValue); if (currentUser && dbRef) { dbRef.child(localKey).set(strValue); } } catch(e){} }
+  function load(key, def) { try { const v = localStorage.getItem('bujo_'+key); return v !== null ? JSON.parse(v) : def; } catch(e) { return def; } }
+  function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebar-overlay').classList.toggle('open'); }
+
+  const today = new Date(); let currentPanel = 'index'; let currentMonth = today.getMonth(); let currentYear = today.getFullYear(); let weekStart = getWeekStart(today); let logDate = new Date(today);
+  let selectedSym = '●'; let activeDumpTag = 'idea'; let draggedCard = null; let navHistory = []; let selectedMonthlyDay = today.getDate();
+let _modalCtx = {}; let tempAppConfig = {};
+
+  window.pressTimer = null; window.isLongPress = false;
+  window.startPress = function(e, id, yr, mo, day, dKey) {
+      if(e.button !== undefined && e.button !== 0) return;
+      window.isLongPress = false;
+      window.pressTimer = setTimeout(() => { window.isLongPress = true; executeAutomaticMigration(id, yr, mo, day, dKey); }, 650);
+  };
+  window.endPress = function(e, id, yr, mo, day, dKey) {
+      if(e.button !== undefined && e.button !== 0) return; clearTimeout(window.pressTimer);
+      if (!window.isLongPress) { cycleTaskStatus(id, yr, mo, day, dKey); } window.isLongPress = false;
+  };
+  window.cancelPress = function(e) { clearTimeout(window.pressTimer); window.isLongPress = false; };
+  window.startTaskPress = function(e, id, yr, mo, day, dKey) { if(e.button !== undefined && e.button !== 0) return; window.isLongPress = false; window.pressTimer = setTimeout(() => { window.isLongPress = true; executeAutomaticMigration(id, yr, mo, day, dKey); }, 650); };
+  window.endTaskPress = function(e, id, yr, mo, day, dKey) { if(e.button !== undefined && e.button !== 0) return; clearTimeout(window.pressTimer); window.isLongPress = false; };
+  function genTextAttrs(t_val, y, m, d, dk) { const sy = y!==null&&y!==undefined?y:'null'; const sm = m!==null&&m!==undefined?m:'null'; const sd = d!==null&&d!==undefined?d:'null'; const sdk = dk?"'"+dk+"'":'null'; return 'onpointerdown="startTaskPress(event, \''+t_val.id+'\', '+sy+', '+sm+', '+sd+', '+sdk+')" onpointerup="endTaskPress(event, \''+t_val.id+'\', '+sy+', '+sm+', '+sd+', '+sdk+')" onpointerleave="cancelPress(event)" oncontextmenu="event.preventDefault();" class="task-text-press"'; }
+
+  function executeAutomaticMigration(id, yr, mo, day, dKey) {
+      const tasks = load('tasks_v2', []); const t_val = tasks.find(x => x.id == id); if(!t_val) return;
+      t_val.sym = '>'; t_val.done = false; t_val.status = 'migrated';
+      let targetDate = new Date(); if (day && mo !== null && yr) { targetDate = new Date(yr, mo, day); } else if (dKey) { const p = dKey.split('_'); targetDate = new Date(parseInt(p[0]), parseInt(p[1]), parseInt(p[2])); }
+      targetDate.setDate(targetDate.getDate() + 1);
+      tasks.push({ id: String(Date.now() + Math.random()), text: t_val.text, sym: t_val._prevSym || '●', done: false, status: 'active', year: targetDate.getFullYear(), month: targetDate.getMonth(), day: targetDate.getDate(), dayKey: dayKey(targetDate), weekKey: weekKey(targetDate), recurrence: t_val.recurrence, isFutureLog: t_val.isFutureLog, doneDates: [], tag: t_val.tag, time: t_val.time });
+      save('tasks_v2', tasks); refreshCurrentPanel(); openModal('alert', t('msgMig'));
+  }
+
+  function cycleTaskStatus(id, yr, mo, day, dKey) {
+      const tasks = load('tasks_v2', []); const t_val = tasks.find(x => x.id == id); if(!t_val) return;
+      if(t_val.sym === '✓') { t_val.sym = t_val._prevSym || '●'; t_val.done = false; } 
+      else if (t_val.sym !== '>') { t_val._prevSym = t_val.sym; t_val.sym = '✓'; t_val.done = true; } 
+      else { t_val.sym = '●'; t_val.done = false; }
+      if(t_val.recurrence && t_val.recurrence !== 'none') { if(!t_val.doneDates) t_val.doneDates = []; const ik = dKey || `${yr}_${mo}_${day||'X'}`; if(t_val.sym === '✓') { if(!t_val.doneDates.includes(ik)) t_val.doneDates.push(ik); } else { t_val.doneDates = t_val.doneDates.filter(d => d !== ik); } }
+      save('tasks_v2', tasks); refreshCurrentPanel();
+  }
+
+  function genSymHtml(t_val, y, m, d, dk) {
+     const sy = y!==null&&y!==undefined?y:'null'; const sm = m!==null&&m!==undefined?m:'null'; const sd = d!==null&&d!==undefined?d:'null'; const sdk = dk?`'${dk}'`:'null';
+     return `<span class="log-symbol" onpointerdown="startPress(event, '${t_val.id}', ${sy}, ${sm}, ${sd}, ${sdk})" onpointerup="endPress(event, '${t_val.id}', ${sy}, ${sm}, ${sd}, ${sdk})" onpointerleave="cancelPress(event)" oncontextmenu="event.preventDefault();" style="touch-action:none; user-select:none; -webkit-user-select:none;">${t_val.sym||'●'}</span>`;
+  }
+
+  function getWeekStart(d) { const dt=new Date(d); const diff=(dt.getDay()===0)?-6:1-dt.getDay(); dt.setDate(dt.getDate()+diff); dt.setHours(0,0,0,0); return dt; }
+  function weekKey(d) { const ws=getWeekStart(d); const jan4=new Date(ws.getFullYear(),0,4); const wNum=Math.round((ws-getWeekStart(jan4))/(7*86400000))+1; return `${ws.getFullYear()}_W${String(wNum).padStart(2,'0')}`; }
+  function dayKey(d) { return `${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`; }
+  function buildKeys(yr, mo, dayVal) { let keys = { year: yr, month: mo, day: null, dayKey: null, weekKey: null }; if(dayVal) { const d = new Date(yr, mo, parseInt(dayVal)); keys.day = d.getDate(); keys.dayKey = dayKey(d); keys.weekKey = weekKey(d); } return keys; }
+
+  function getBaseTags() { return [ {id:'idea', label:t('tg1'), bg:'#f5ede4', color:'#8b4513'}, {id:'art', label:t('tg2'), bg:'#f5e8f5', color:'#8a2d6a'}, {id:'shopping', label:t('tg3'), bg:'#e0f2f1', color:'#004d40'} ]; }
+  function getTags() { return load('tags_v1', getBaseTags()); }
+  function saveTags(t_array) { save('tags_v1', t_array); renderTagStyles(); updateTagSelects(); if(currentPanel==='tags') renderTagsPanel(); }
+  function renderTagStyles() { let css = ''; getTags().forEach(tag => { css += `.k-tag.${tag.id} { background: ${tag.bg} !important; color: ${tag.color} !important; border-color: ${tag.color} !important; }\n.dump-tag.active-${tag.id} { background: ${tag.bg} !important; color: ${tag.color} !important; border-color: ${tag.color} !important; }\n`; }); document.getElementById('dynamic-tag-styles').innerHTML = css; }
+  function getTagOptionsHtml(selected = '') { let html = `<option value="">${t('selTg')}</option>`; getTags().forEach(tag => { html += `<option value="${tag.id}" ${selected===tag.id?'selected':''}>${tag.label}</option>`; }); return html; }
+  function updateTagSelects() { const dailySel = document.getElementById('new-entry-tag'); if(dailySel) dailySel.innerHTML = getTagOptionsHtml(); }
+  function getTagLabel(id) { if(!id) return ''; const tag = getTags().find(x => x.id == id); return tag ? tag.label : id; }
+
+  function getLists() { return load('lists_v2', []); }
+  function saveLists(data) { save('lists_v2', data); }
+
+  function getGoals() { return load('goals_v1', [ { id: 'g_year', title: currentYear + ' ' + t('navGl'), items: [], showInYearly: true, showInMonthly: false, showInWeekly: false, showInDaily: false } ]); }
+  function saveGoals(data) { save('goals_v1', data); }
+
+  function renderGoalsForView(viewType, containerId, appendToPanelId) {
+      let yg = document.getElementById(containerId);
+      if(!yg) { yg = document.createElement('div'); yg.id = containerId; yg.style.marginTop = '24px'; yg.style.borderTop = '2px dashed var(--line-strong)'; yg.style.paddingTop = '16px'; document.getElementById(appendToPanelId).appendChild(yg); }
+      yg.innerHTML = ''; const key = 'showIn' + viewType; const goalsToShow = getGoals().filter(g => g[key]);
+      if(goalsToShow.length > 0) {
+          let html = `<div style="font-size:var(--fs-md); font-family:var(--f-head); font-style:italic; color:var(--accent); margin-bottom:16px; font-weight:600; display:flex; align-items:center; gap:8px;">🎯 ${t('navGl')}</div><div class="lists-grid">`;
+          goalsToShow.forEach(g => {
+              let itemsHtml = '';
+              g.items.forEach(itm => { const displaySym = itm.done ? '✓' : (itm.sym||'●'); itemsHtml += `<div class="list-item-row show-on-hover"><span class="log-symbol" style="font-size:14px; margin-right:8px; cursor:pointer;" onclick="cycleGoalEntry('${g.id}', '${itm.id}')">${displaySym}</span><span style="${itm.done?'text-decoration:line-through;opacity:0.5':''} flex:1;">${itm.text}</span></div>`; });
+              if(g.items.length === 0) itemsHtml = `<div style="font-size:var(--fs-xs); color:var(--ink-muted); font-style:italic; padding:6px;">${t('msgEmp')}</div>`;
+              html += `<div class="list-card"><div class="list-title" style="cursor:pointer;" onclick="showPanel('goals')"><span>${g.title}</span> <span style="font-size:12px; opacity:0.6;">↗</span></div><div style="flex:1; border:2px solid var(--line-strong); border-radius:var(--radius); overflow:hidden;">${itemsHtml}</div></div>`;
+          });
+          html += `</div>`; yg.innerHTML = html;
+      }
+  }
+  function cycleGoalEntry(gid, iid) { const goals = getGoals(); const g = goals.find(x => x.id === gid); if(g) { const itm = g.items.find(y => y.id === iid); if(itm) { itm.done = !itm.done; saveGoals(goals); refreshCurrentPanel(); } } }
+  function deleteGoalItem(gid, iid) { const goals = getGoals(); const g = goals.find(x => x.id === gid); if(g) { g.items = g.items.filter(y => y.id !== iid); saveGoals(goals); renderGoalsPanel(); if(['yearly','monthly','weekly','daily'].includes(currentPanel)) refreshCurrentPanel(); } }
+  function deleteGoalCat(gid) { let goals = getGoals(); goals = goals.filter(x => x.id !== gid); saveGoals(goals); renderGoalsPanel(); if(['yearly','monthly','weekly','daily'].includes(currentPanel)) refreshCurrentPanel(); }
+
+  function renderListsForView(viewType, containerId, appendToPanelId) {
+      let yg = document.getElementById(containerId);
+      if(!yg) { yg = document.createElement('div'); yg.id = containerId; yg.style.marginTop = '24px'; document.getElementById(appendToPanelId).appendChild(yg); }
+      yg.innerHTML = ''; const key = 'showIn' + viewType; const listsToShow = getLists().filter(g => g[key]);
+      if(listsToShow.length > 0) {
+          let html = `<div style="font-size:var(--fs-md); font-family:var(--f-head); font-style:italic; color:var(--accent); margin-bottom:16px; font-weight:600; display:flex; align-items:center; gap:8px;">≣ ${t('navLs')}</div><div class="lists-grid">`;
+          listsToShow.forEach(lst => {
+              let itemsHtml = '';
+              lst.items.forEach(itm => { itemsHtml += `<div class="list-item-row show-on-hover"><input type="checkbox" ${itm.done?'checked':''} onchange="toggleListItem('${lst.id}', '${itm.id}', this.checked)"><span class="list-item-text" style="${itm.done?'text-decoration:line-through;opacity:0.5':''} flex:1;">${itm.text}</span></div>`; });
+              if(lst.items.length === 0) itemsHtml = `<div style="font-size:var(--fs-xs); color:var(--ink-muted); font-style:italic; padding:6px;">${t('msgEmp')}</div>`;
+              html += `<div class="list-card"><div class="list-title" style="cursor:pointer;" onclick="showPanel('lists')"><span>${lst.title}</span> <span style="font-size:12px; opacity:0.6;">↗</span></div><div style="flex:1; border:2px solid var(--line-strong); border-radius:var(--radius); overflow:hidden;">${itemsHtml}</div></div>`;
+          });
+          html += `</div>`; yg.innerHTML = html;
+      }
+  }
+
+  function getTasksForDate(yr, mo, day=null, dKey=null, wKey=null) {
+      return load('tasks_v2', []).filter(t => {
+          if (day === null && dKey === null && wKey === null) {
+              if (t.year === yr && t.month === mo) return true;
+              if (t.recurrence === 'yearly' && t.month === mo && yr >= t.year) return true;
+              if (t.recurrence === 'monthly' && (t.year < yr || (t.year === yr && t.month <= mo))) return true;
+              if (t.recurrence === 'daily' && (t.year < yr || (t.year === yr && t.month <= mo))) return true;
+              if (t.recurrence === 'weekly' && (t.year < yr || (t.year === yr && t.month <= mo))) return true;
+              return false;
+          }
+          if (dKey) {
+              if (t.dayKey === dKey) return true;
+              if (t.isFutureLog && t.year === yr && t.month === mo && t.day === day) return true;
+              if (t.dayKey) {
+                  const parts = t.dayKey.split('_'); const tY = parseInt(parts[0]), tM = parseInt(parts[1]), tD = parseInt(parts[2]);
+                  const originalDate = new Date(tY, tM, tD); const currentDate = new Date(yr, mo, day);
+                  if (currentDate >= originalDate) {
+                      if (t.recurrence === 'daily') return true;
+                      if (t.recurrence === 'weekly' && currentDate.getDay() === originalDate.getDay()) return true;
+                      if (t.recurrence === 'monthly' && tD === day) return true;
+                      if (t.recurrence === 'yearly' && tM === mo && tD === day) return true;
+                  }
+              }
+              return false;
+          }
+          if (wKey) {
+              if (t.weekKey === wKey && !t.dayKey) return true;
+              if (t.recurrence === 'weekly' && t.weekKey && !t.dayKey) {
+                  const tY = parseInt(t.weekKey.split('_W')[0]); const tW = parseInt(t.weekKey.split('_W')[1]);
+                  const cY = parseInt(wKey.split('_W')[0]); const cW = parseInt(wKey.split('_W')[1]);
+                  if (cY > tY || (cY === tY && cW >= tW)) return true;
+              }
+              return false;
+          }
+          return false;
+      });
+  }
+
+  function addTask(text, options = {}) {
+    const tasks = load('tasks_v2', []);
+    const task = { id: String(Date.now() + Math.random()), text: text, tag: options.tag||'', sym: options.sym||'●', done: false, status: 'active', year: options.year, month: options.month, day: options.day, dayKey: options.dayKey, weekKey: options.weekKey, recurrence: options.recurrence||'none', isFutureLog: options.isFutureLog||false, doneDates: [], createdAt: new Date().toISOString() };
+    tasks.push(task); save('tasks_v2', tasks); return task;
+  }
+  function updateTask(id, patch) { const tasks = load('tasks_v2', []); const i = tasks.findIndex(t => t.id == id); if(i >= 0) { Object.assign(tasks[i], patch); save('tasks_v2', tasks); } }
+  function deleteTask(id) { const tasks = load('tasks_v2', []).filter(t => t.id != id); save('tasks_v2', tasks); refreshCurrentPanel(); }
+
+  function showPanel(name, isBack = false) {
+    if (!isBack && currentPanel !== name) { navHistory.push(currentPanel); } currentPanel = name;
+    document.querySelectorAll('.panel').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; }); 
+    const activePanel = document.getElementById('panel-'+name);
+    if(activePanel) { activePanel.classList.add('active'); activePanel.style.display = 'block'; }
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(i => { if(i.getAttribute('onclick') && i.getAttribute('onclick').includes(`'${name}'`)) i.classList.add('active'); });
+    applyTranslations(); refreshCurrentPanel();
+  }
+  function goBack() { if (navHistory.length > 0) { const prev = navHistory.pop(); showPanel(prev, true); } else { showPanel('index', true); } }
+  
+  function refreshCurrentPanel() {
+    if(currentPanel==='index') renderIndex();
+    else if(currentPanel==='yearly') renderYearly(); else if(currentPanel==='monthly') renderMonthly();
+    else if(currentPanel==='weekly') renderWeekly(); else if(currentPanel==='daily') renderDaily();
+    else if(currentPanel==='kanban') renderKanban(); else if(currentPanel==='habits') renderHabits();
+    else if(currentPanel==='brain') renderBrain(); else if(currentPanel==='tags') renderTagsPanel();
+    else if(currentPanel==='lists') renderListsPanel(); else if(currentPanel==='vision') renderVisionBoard();
+    else if(currentPanel==='goals') renderGoalsPanel();
+  }
+
+  // --- 0. İNDEKS ---
+  function renderIndex() {
+    const container = document.getElementById('index-links-container'); container.innerHTML = '';
+    const cores = [ 
+      {name:t('navYr'), icon:'<img src="./asset/icon.ico" style="width:16px; height:16px; object-fit:contain; vertical-align:-3px;">', id:'yearly'}, 
+      {name:t('navMo'), icon:'<img src="./asset/icon.ico" style="width:16px; height:16px; object-fit:contain; vertical-align:-3px;">', id:'monthly'}, 
+      {name:t('navWk'), icon:'<img src="./asset/icon.ico" style="width:16px; height:16px; object-fit:contain; vertical-align:-3px;">', id:'weekly'}, 
+      {name:t('navDy'), icon:'<img src="./asset/icon.ico" style="width:16px; height:16px; object-fit:contain; vertical-align:-3px;">', id:'daily'}, 
+      {name:t('navGl'), icon:'🎯', id:'goals'}, 
+      {name:t('navKb'), icon:'⊞', id:'kanban'}, 
+      {name:t('navBr'), icon:'💭', id:'brain'}, 
+      {name:t('navVs'), icon:'🖼', id:'vision'}, 
+      {name:t('navHb'), icon:'🔗', id:'habits'}, 
+      {name:t('navTg'), icon:'❖', id:'tags'},
+      {name:t('navLs'), icon:'≣', id:'lists'}
+    ];
+    cores.forEach(c => { container.innerHTML += `<a class="index-link" onclick="showPanel('${c.id}')">${c.icon} ${c.name}</a>`; });
+  }
+
+  // --- 1. YILLIK ---
+  function renderYearly() {
+    document.getElementById('year-title').textContent = currentYear; const grid = document.getElementById('year-grid'); grid.innerHTML = '';
+    const mNames = [t('m1'),t('m2'),t('m3'),t('m4'),t('m5'),t('m6'),t('m7'),t('m8'),t('m9'),t('m10'),t('m11'),t('m12')];
+    mNames.forEach((m, mi) => {
+      const entries = load('tasks_v2', []).filter(t => (t.year === currentYear || t.recurrence==='yearly') && t.month === mi && (t.isFutureLog || t.sym==='○' || t.sym==='★')).sort((a,b)=>(a.day||0)-(b.day||0));
+      const block = document.createElement('div'); block.className = 'month-block'; block.innerHTML = `<div class="month-name"><span>${m}</span></div>`;
+      entries.forEach(t_val => {
+        const div = document.createElement('div'); div.className = 'month-entry show-on-hover';
+        div.innerHTML = `${genSymHtml(t_val, currentYear, mi, t_val.day)}<span ${genTextAttrs(t_val, currentYear, mi, t_val.day)} style="flex:1;${t_val.sym==='✓'?'text-decoration:line-through;opacity:.5':''}">${t_val.day ? t_val.day+'. ' : ''}${t_val.time ? '🔔 ' : ''}${t_val.text}</span>${t_val.tag ? `<span class="k-tag ${t_val.tag}" style="margin-left:8px; font-size:10px;">${getTagLabel(t_val.tag)}</span>` : ''}<div class="hover-actions"><button class="action-btn" onclick="openModal('edit_task', '${t_val.id}')">✎</button><button class="action-btn" onclick="event.stopPropagation();deleteTask('${t_val.id}')">×</button></div>`;
+        block.appendChild(div);
+      });
+      const addBtn = document.createElement('button'); addBtn.className = 'add-month-entry'; addBtn.textContent = t('mEvt');
+      addBtn.onclick = () => openYearlyAdd(mi, m, currentYear); block.appendChild(addBtn); grid.appendChild(block);
+    });
+    renderGoalsForView('Yearly', 'yearly-goals-render', 'panel-yearly');
+    renderListsForView('Yearly', 'yearly-lists-render', 'panel-yearly');
+  }
+
+  // --- 2. AYLIK ---
+  function renderMonthly() {
+    const mNames = [t('m1'),t('m2'),t('m3'),t('m4'),t('m5'),t('m6'),t('m7'),t('m8'),t('m9'),t('m10'),t('m11'),t('m12')];
+    document.getElementById('month-title').textContent = mNames[currentMonth] + ' ' + currentYear;
+    document.getElementById('monthly-filter-label').textContent = `${selectedMonthlyDay} ${mNames[currentMonth]} ${t('mTasks')}`;
+    
+    const grid = document.getElementById('cal-grid'); grid.innerHTML = '';
+    [t('d1'),t('d2'),t('d3'),t('d4'),t('d5'),t('d6'),t('d7')].forEach(d => { grid.innerHTML += `<div class="cal-day-label">${d}</div>`; });
+    const first = new Date(currentYear, currentMonth, 1).getDay(); const days = new Date(currentYear, currentMonth+1, 0).getDate(); const offset = (first===0) ? 6 : first-1;
+    for(let i=0;i<offset;i++) grid.innerHTML += `<div class="cal-day empty"></div>`;
+    for(let d=1;d<=days;d++) {
+      const dk = `${currentYear}_${currentMonth}_${d}`; const hasEv = getTasksForDate(currentYear, currentMonth, d, dk).length > 0;
+      const isToday = d===today.getDate() && currentMonth===today.getMonth() && currentYear===today.getFullYear();
+      const el = document.createElement('div'); el.className = `cal-day ${isToday?'today':''} ${hasEv?'has-event':''} ${d===selectedMonthlyDay?'selected-day-focus':''}`; el.textContent = d;
+      el.onclick = () => { selectedMonthlyDay = d; renderMonthly(); }; grid.appendChild(el);
+    }
+
+    const container = document.getElementById('monthly-tasks'); container.innerHTML = '';
+    const currentDayKey = `${currentYear}_${currentMonth}_${selectedMonthlyDay}`;
+    getTasksForDate(currentYear, currentMonth, selectedMonthlyDay, currentDayKey).forEach(t_val => {
+        const div = document.createElement('div'); div.className = 'monthly-task show-on-hover';
+        div.innerHTML = `${genSymHtml(t_val, currentYear, currentMonth, selectedMonthlyDay, currentDayKey)}<span ${genTextAttrs(t_val, currentYear, currentMonth, selectedMonthlyDay, currentDayKey)} style="flex:1;${t_val.sym==='✓'?'text-decoration:line-through;opacity:0.5':''}">${t_val.time ? '🔔 ' : ''}${t_val.text}</span>${t_val.tag ? `<span class="k-tag ${t_val.tag}" style="margin-left:8px; font-size:10px;">${getTagLabel(t_val.tag)}</span>` : ''}<div class="hover-actions"><button class="action-btn" onclick="openModal('edit_task', '${t_val.id}')">✎</button><button class="action-btn" onclick="deleteTask('${t_val.id}')">×</button></div>`;
+        container.appendChild(div);
+    });
+    renderGoalsForView('Monthly', 'monthly-goals-render', 'panel-monthly');
+    renderListsForView('Monthly', 'monthly-lists-render', 'panel-monthly');
+  }
+  function changeMonth(dir) { currentMonth+=dir; if(currentMonth>11){currentMonth=0;currentYear++;} if(currentMonth<0){currentMonth=11;currentYear--;} selectedMonthlyDay=1; renderMonthly(); }
+
+ // --- 3. HAFTALIK ---
+function renderWeekly() {
+  const ws = weekStart; const we = new Date(ws); we.setDate(we.getDate()+6); const mNames = [t('m1'),t('m2'),t('m3'),t('m4'),t('m5'),t('m6'),t('m7'),t('m8'),t('m9'),t('m10'),t('m11'),t('m12')];
+  document.getElementById('week-title').textContent = `${mNames[ws.getMonth()]} - ${Math.ceil(ws.getDate() / 7)}. ${t('navWk')}`;
+  document.getElementById('week-subtitle').textContent = `${ws.getDate()} ${mNames[ws.getMonth()]} — ${we.getDate()} ${mNames[we.getMonth()]} ${we.getFullYear()}`;
+  
+  const container = document.getElementById('weekly-landscape-board'); container.innerHTML = '';
+  const dNames = [t('d1'),t('d2'),t('d3'),t('d4'),t('d5'),t('d6'),t('d7')];
+  const wk = weekKey(ws);
+
+  for(let i=0; i<7; i++) {
+    const d = new Date(ws); d.setDate(ws.getDate()+i); const dk = dayKey(d);
+    const isToday = d.toDateString() === today.toDateString();
+    
+    const rowCard = document.createElement('div'); rowCard.className = 'weekly-day-row-card';
+    if(isToday) rowCard.style.borderColor = 'var(--accent)';
+
+    const headerHtml = `<div class="weekly-day-row-header" style="${isToday?'background:var(--accent);':''}">
+      <div class="weekly-day-row-name">${dNames[i]}</div>
+      <div class="weekly-day-row-num">${d.getDate()}</div>
+    </div>`;
+
+    const dayTasks = [...getTasksForDate(d.getFullYear(), d.getMonth(), d.getDate(), dk), ...(i===0 ? getTasksForDate(ws.getFullYear(), ws.getMonth(), null, null, wk) : [])];
+    let bodyHtml = `<div class="weekly-day-row-body">`;
+    
+    dayTasks.forEach(t_val => {
+      bodyHtml += `<div class="weekly-grid-task-pill show-on-hover">
+        <div style="flex-shrink:0; padding-top:2px;">${genSymHtml(t_val, d.getFullYear(), d.getMonth(), d.getDate(), t_val.dayKey)}</div>
+        <span ${genTextAttrs(t_val, d.getFullYear(), d.getMonth(), d.getDate(), t_val.dayKey)} style="flex:1; text-align:justify; line-height:1.4; padding-right:4px; ${t_val.sym==='✓'?'text-decoration:line-through;opacity:.5':''}">${t_val.time ? '🔔 ' : ''}${t_val.text}</span>
+        ${t_val.tag ? `<span class="k-tag ${t_val.tag}" style="margin-left:auto; font-size:10px;">${getTagLabel(t_val.tag)}</span>` : ''}
+        <div class="hover-actions"><button class="action-btn" onclick="openModal('edit_task', '${t_val.id}')">✎</button><button class="action-btn" onclick="deleteTask('${t_val.id}')">×</button></div>
+      </div>`;
+    });
+    if(dayTasks.length === 0) bodyHtml += `<div style="font-size:13px;opacity:0.6;font-style:italic;">${t('msgEmp')}</div>`;
+    
+    bodyHtml += `<button class="action-btn" style="height:34px; width:45px; margin-left:auto; font-size:16px;" onclick="openModal('add_weekly', '${dk}')">+</button></div>`;
+    rowCard.innerHTML = headerHtml + bodyHtml; container.appendChild(rowCard);
+  }
+  renderGoalsForView('Weekly', 'weekly-goals-render', 'panel-weekly');
+  renderListsForView('Weekly', 'weekly-lists-render', 'panel-weekly');
+}
+
+  // --- 4. GÜNLÜK KAYITLAR ---
+  function renderDaily() {
+    const nav = document.getElementById('day-nav'); nav.innerHTML = ''; const dk = dayKey(logDate);
+    const mNames = [t('m1'),t('m2'),t('m3'),t('m4'),t('m5'),t('m6'),t('m7'),t('m8'),t('m9'),t('m10'),t('m11'),t('m12')];
+    for(let i=-3; i<=3; i++) {
+      const d = new Date(logDate); d.setDate(d.getDate()+i); const btn = document.createElement('button'); btn.className = 'log-day-btn' + (i===0 ? ' today' : ''); btn.textContent = (d.toDateString() === today.toDateString()) ? t('navDy') : `${d.getDate()} ${mNames[d.getMonth()]}`; btn.onclick = () => { logDate = d; renderDaily(); }; nav.appendChild(btn);
+    }
+    const container = document.getElementById('log-entries'); container.innerHTML = ''; const entries = getTasksForDate(logDate.getFullYear(), logDate.getMonth(), logDate.getDate(), dk);
+    if(entries.length === 0) { container.innerHTML = `<div style="padding:24px 10px;font-size:var(--fs-norm);color:var(--ink-muted);font-weight:600;">${t('msgEmp')}</div>`; }
+    entries.forEach(t_val => {
+      const div = document.createElement('div'); div.className = 'log-entry show-on-hover';
+      div.innerHTML = `${genSymHtml(t_val, logDate.getFullYear(), logDate.getMonth(), logDate.getDate(), dk)}<div class="log-text" ${genTextAttrs(t_val, logDate.getFullYear(), logDate.getMonth(), logDate.getDate(), dk)} style="${t_val.sym==='✓'?'text-decoration:line-through;opacity:.5':''}">${t_val.time ? '🔔 ' : ''}${t_val.text}</div>${t_val.tag ? `<span class="log-tag k-tag ${t_val.tag}">${getTagLabel(t_val.tag)}</span>` : ''}<div class="hover-actions" style="margin-left:10px;"><button class="action-btn" onclick="openModal('edit_task', '${t_val.id}')">✎</button><button class="action-btn" onclick="deleteTask('${t_val.id}')">×</button></div>`; container.appendChild(div);
+    });
+    renderGoalsForView('Daily', 'daily-goals-render', 'panel-daily');
+    renderListsForView('Daily', 'daily-lists-render', 'panel-daily');
+  }
+  function handleNewEntryBtn() {
+    const input = document.getElementById('new-entry-input'); const text = input.value.trim(); if(!text) return;
+    const tagEl = document.getElementById('new-entry-tag'); const recEl = document.getElementById('new-entry-recurrence');
+    addTask(text, { tag: tagEl?tagEl.value:'', sym: selectedSym, recurrence: recEl?recEl.value:'none', year: logDate.getFullYear(), month: logDate.getMonth(), weekKey: weekKey(logDate), dayKey: dayKey(logDate), day: logDate.getDate() }); input.value = ''; renderDaily();
+  }
+  function selectSym(el) { document.querySelectorAll('#symbol-picker .sym-opt').forEach(s => s.classList.remove('selected')); el.classList.add('selected'); selectedSym = el.dataset.sym; }
+
+  // --- HEDEFLER EKRANI ---
+  function renderGoalsPanel() {
+    const container = document.getElementById('goals-container'); container.innerHTML = ''; const goals = getGoals();
+    if(goals.length === 0) { container.innerHTML = `<div style="font-size:var(--fs-norm);color:var(--ink-soft);font-weight:600;">${t('mEmp')}</div>`; return; }
+    goals.forEach(g => {
+      const card = document.createElement('div'); card.className = 'list-card'; let itemsHtml = '';
+      g.items.forEach(itm => {
+        const displaySym = itm.done ? '✓' : (itm.sym||'●');
+        itemsHtml += `<div class="list-item-row show-on-hover"><span class="log-symbol" style="font-size:14px; margin-right:6px;" onclick="event.stopPropagation(); cycleGoalEntry('${g.id}', '${itm.id}')">${displaySym}</span><span class="list-item-text" style="${itm.done?'text-decoration:line-through;opacity:0.5':''} font-weight:600; flex:1;">${itm.text}</span><div class="hover-actions"><button class="action-btn" onclick="event.stopPropagation(); openModal('edit_goal_item', {gid:'${g.id}', iid:'${itm.id}'})">✎</button><button class="action-btn" onclick="event.stopPropagation(); deleteGoalItem('${g.id}', '${itm.id}')">×</button></div></div>`;
+      });
+      card.innerHTML = `<div class="list-title show-on-hover"><span>${g.title}</span><div class="hover-actions" style="margin-top:-4px;"><button class="action-btn" onclick="event.stopPropagation(); openModal('edit_goal_cat', '${g.id}')">✎</button><button class="action-btn" onclick="event.stopPropagation(); deleteGoalCat('${g.id}')">×</button></div></div><div style="flex:1; border:2px solid var(--line-strong); border-radius:var(--radius); overflow:hidden;">${itemsHtml}</div><div class="kanban-add" onclick="event.stopPropagation(); openModal('add_goal_item', '${g.id}')">${t('lItm')}</div>`; container.appendChild(card);
+    });
+  }
+
+  // --- VİZYON PANOSU MOTORU ---
+  function renderVisionBoard() {
+     document.getElementById('v3-more-textarea').value = load('v3_more_gains', '');
+     document.getElementById('v3-less-textarea').value = load('v3_less_gains', '');
+     const container = document.getElementById('vision-board-pins-container'); container.innerHTML = '';
+     const items = load('v3_vision_pins', []);
+     items.forEach((item, idx) => {
+        if(item.type === 'img') container.innerHTML += `<div style="position:relative;" class="show-on-hover"><img src="${item.content}" class="vision-img"><div class="hover-actions" style="position:absolute; top:6px; right:6px;"><button class="action-btn" onclick="editVisionPin(${idx})">✎</button><button class="action-btn" onclick="deleteVisionPin(${idx})">×</button></div></div>`;
+        else container.innerHTML += `<div class="vision-note show-on-hover">${item.content}<div class="hover-actions" style="position:absolute; top:6px; right:6px;"><button class="action-btn" onclick="editVisionPin(${idx})">✎</button><button class="action-btn" onclick="deleteVisionPin(${idx})">×</button></div></div>`;
+     });
+  }
+  window.editingVisionIdx = null;
+  function editVisionPin(idx) {
+      const items = load('v3_vision_pins', []); const item = items[idx];
+      if (item.type === 'text') { openModal('edit_vision_note', idx); }
+      else { window.editingVisionIdx = idx; document.getElementById('vision-file-edit').click(); }
+  }
+  function editVisionPhotoAction(e) {
+     const file = e.target.files[0]; if(!file) return; const reader = new FileReader();
+     reader.onload = function(ev) {
+        const img = new Image(); img.onload = function() {
+           const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+           const scale = Math.min(400 / img.width, 1); canvas.width = img.width * scale; canvas.height = img.height * scale;
+           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+           const pins = load('v3_vision_pins', []); pins[window.editingVisionIdx].content = canvas.toDataURL('image/jpeg', 0.7);
+           save('v3_vision_pins', pins); renderVisionBoard();
+        }; img.src = ev.target.result;
+     }; reader.readAsDataURL(file);
+     e.target.value = '';
+  }
+  
+  function saveLessMoreGains(btn) { 
+     save('v3_more_gains', document.getElementById('v3-more-textarea').value); 
+     save('v3_less_gains', document.getElementById('v3-less-textarea').value); 
+     const origText = btn.textContent; 
+     btn.textContent = t('msgSaved'); 
+     btn.style.backgroundColor = "var(--done)";
+     btn.style.borderColor = "var(--done)";
+     setTimeout(() => { btn.textContent = origText; btn.style.backgroundColor = ""; btn.style.borderColor = ""; }, 2000); 
+  }
+  function uploadVisionPhoto(e) {
+     const file = e.target.files[0]; if(!file) return; const reader = new FileReader();
+     reader.onload = function(ev) {
+        const img = new Image(); img.onload = function() {
+           const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+           const scale = Math.min(400 / img.width, 1); canvas.width = img.width * scale; canvas.height = img.height * scale;
+           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+           const pins = load('v3_vision_pins', []); pins.push({type:'img', content:canvas.toDataURL('image/jpeg', 0.7)});
+           save('v3_vision_pins', pins); renderVisionBoard();
+        }; img.src = ev.target.result;
+     }; reader.readAsDataURL(file);
+  }
+  function addVisionPostIt() { openModal('add_vision_note'); }
+  function deleteVisionPin(idx) { const pins = load('v3_vision_pins', []); pins.splice(idx,1); save('v3_vision_pins', pins); renderVisionBoard(); }
+
+  // --- KANBAN SİSTEMİ ---
+  function defaultKanban() { return { todo:[], doing:[], done:[] }; }
+  function renderKanban() {
+    const board = document.getElementById('kanban-board'); board.innerHTML = ''; const data = load('kanban', defaultKanban());
+    [{ id:'todo', label:t('kTd'), border:'#703610' },{ id:'doing', label:t('kDg'), border:'var(--migrate)' },{ id:'done', label:t('kDn'), border:'var(--done)' }].forEach(col => {
+      const colEl = document.createElement('div'); colEl.className='kanban-col'; colEl.dataset.col=col.id; colEl.innerHTML=`<div class="kanban-col-title">${col.label} <span style="background:var(--line-strong);color:white;padding:1px 6px;border-radius:10px;font-size:11px;">${(data[col.id]||[]).length}</span></div>`; 
+      const cardsContainer = document.createElement('div'); cardsContainer.style.minHeight = '100px';
+      (data[col.id]||[]).forEach(card => {
+        const cardEl = document.createElement('div'); cardEl.className='kanban-card show-on-hover'; cardEl.draggable=true; cardEl.dataset.id=card.id; 
+        cardEl.style.borderLeft=`4px solid ${col.border}`; cardEl.style.flexDirection='column'; cardEl.style.alignItems='stretch'; cardEl.dataset.note = card.note || '';
+        cardEl.innerHTML=`
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; width:100%; gap:8px;">
+            <div class="kanban-card-title" style="flex:1; word-break:break-word; margin-bottom:0; line-height:1.4;">${card.title}</div>
+            <div class="hover-actions" style="margin-top:-2px; flex-shrink:0;">
+              <button class="action-btn" onclick="openModal('edit_kanban', {col:'${col.id}', id:'${card.id}'})">✎</button>
+              <button class="action-btn" onclick="deleteKanban('${col.id}', '${card.id}')">×</button>
+            </div>
+          </div>
+          ${card.note ? `<div style="font-size:12px; color:var(--ink-muted); margin-top:6px; word-break:break-word;">${card.note}</div>` : ''}
+        `;
+        cardEl.addEventListener('dragstart', () => { draggedCard = cardEl; cardEl.classList.add('dragging'); }); cardEl.addEventListener('dragend', () => { draggedCard.classList.remove('dragging'); draggedCard = null; saveKanbanOrder(); }); cardsContainer.appendChild(cardEl);
+      });
+      cardsContainer.addEventListener('dragover', e => { e.preventDefault(); const after = [...cardsContainer.querySelectorAll('.kanban-card:not(.dragging)')].reduce((closest, child) => { const box = child.getBoundingClientRect(); const offset = e.clientY - box.top - box.height / 2; if (offset < 0 && offset > closest.offset) return { offset: offset, element: child }; else return closest; }, { offset: Number.NEGATIVE_INFINITY }).element; if (after == null) cardsContainer.appendChild(draggedCard); else cardsContainer.insertBefore(draggedCard, after); }); colEl.appendChild(cardsContainer);
+      const addBtn=document.createElement('button'); addBtn.className='kanban-add'; addBtn.textContent=t('kAdd'); addBtn.onclick=()=> openModal('add_kanban', col.id); colEl.appendChild(addBtn); board.appendChild(colEl);
+    });
+  }
+  
+  function saveKanbanOrder() {
+      const data = { todo: [], doing: [], done: [] };
+      ['todo', 'doing', 'done'].forEach(col => {
+          const columnEl = document.querySelector(`.kanban-col[data-col="${col}"]`);
+          if(columnEl) {
+              columnEl.querySelectorAll('.kanban-card').forEach(card => {
+                  data[col].push({ id: card.dataset.id, title: card.querySelector('.kanban-card-title').textContent, note: card.dataset.note });
+              });
+          }
+      });
+      save('kanban', data);
+      renderKanban();
+  }
+
+  function deleteKanban(colId, cardId) {
+      const data = load('kanban', defaultKanban());
+      data[colId] = data[colId].filter(x => x.id !== cardId);
+      save('kanban', data);
+      renderKanban();
+  }
+
+  // --- SİSTEMİK MODÜLLER (HABITS, LISTS) ---
+  function renderHabits() {
+    const mNames = [t('m1'),t('m2'),t('m3'),t('m4'),t('m5'),t('m6'),t('m7'),t('m8'),t('m9'),t('m10'),t('m11'),t('m12')];
+
+    const dim = new Date(currentYear, currentMonth + 1, 0).getDate(); 
+    const allHabits = load('habits', [{id:'h1', name:t('defH'), repeat:true}]); 
+    const data = load(`habit_data_${currentYear}_${currentMonth}`, {}); 
+    const c = document.getElementById('habit-rows'); 
+    c.innerHTML = '';
+    
+    const displayHabits = allHabits.filter(h => h.repeat !== false || (h.year === currentYear && h.month === currentMonth));
+    
+    const monthLabel = document.getElementById('habit-month-label');
+    if(monthLabel) {
+      monthLabel.innerHTML = `
+        <span style="font-family:var(--f-body); font-style:italic; font-size:var(--fs-norm); color:var(--migrate); font-weight:600; margin-left:6px; letter-spacing:0.5px;">/ ${mNames[currentMonth]} ${currentYear}</span> 
+        <span style="font-size:11px; color:var(--ink-soft); margin-left:12px; padding:3px 8px; border:1px dashed var(--line-strong); border-radius:12px; background:var(--accent-pale); vertical-align:middle;">${t('mTotHabits')} <b>${displayHabits.length}</b></span>
+      `;
+    }
+
+    const header = document.getElementById('habit-header');
+    if(header) header.style.display = 'none';
+
+    if(displayHabits.length === 0) { 
+      c.innerHTML = `<div style="padding:16px 12px; font-size:var(--fs-sm); color:var(--ink-muted); font-style:italic;">${t('msgNoHabit')}</div>`; 
+    }
+    
+    displayHabits.forEach((h) => {
+      let dotsHtml = ''; 
+      for(let d = 1; d <= dim; d++) { 
+        const f = data[h.id] && data[h.id][d-1]; 
+        dotsHtml += `
+          <div class="habit-dot-wrapper">
+            <span class="habit-day-label">${d}</span>
+            <div class="habit-dot ${f ? 'filled' : ''}" onclick="toggleHabit('${h.id}', ${d-1})"></div>
+          </div>`; 
+      }
+      
+      const row = document.createElement('div'); 
+      row.className = 'habit-row show-on-hover'; 
+      row.innerHTML = `
+        <div class="habit-name">
+          <span style="flex:1;">${h.name}</span>
+          <div class="hover-actions" style="margin-top:10px;">
+            <button class="action-btn" onclick="openModal('edit_habit', '${h.id}')">✎</button>
+            <button class="action-btn" onclick="deleteHabit('${h.id}')">×</button>
+          </div>
+        </div>
+        <div class="habit-dots">${dotsHtml}</div>
+      `; 
+      c.appendChild(row);
+    });
+  }
+
+  function toggleHabit(id, day) { 
+    const data = load(`habit_data_${currentYear}_${currentMonth}`, {}); 
+    if(!data[id]){
+      const dim = new Date(currentYear, currentMonth + 1, 0).getDate();
+      data[id] = new Array(dim).fill(false);
+    } 
+    data[id][day] = !data[id][day]; 
+    save(`habit_data_${currentYear}_${currentMonth}`, data); 
+    renderHabits(); 
+  }
+  
+  function deleteHabit(id) { 
+    const habits = load('habits', []); 
+    const habit = habits.find(x => x.id == id);
+    if(!habit) return;
+    if (habit.repeat !== false) {
+      openModal('confirm_delete_habit', id);
+    } else {
+      const updatedHabits = habits.filter(x => x.id != id); 
+      save('habits', updatedHabits); 
+      renderHabits(); 
+    }
+  }
+  
+  function changeHabitMonth(dir) { 
+    currentMonth += dir; 
+    if(currentMonth > 11) { currentMonth = 0; currentYear++; } 
+    if(currentMonth < 0) { currentMonth = 11; currentYear--; } 
+    renderHabits(); 
+  }
+
+  // --- BRAIN DUMP & ETİKETLER ---
+  function selectBrainTag(tagId) {
+    activeDumpTag = tagId;
+    renderBrain();
+  }
+
+  function saveDumpNote(){ 
+    const text = document.getElementById('brain-dump-input').value.trim(); 
+    if(!text) return; 
+    const notes = load('brain_notes', []); 
+    
+    notes.unshift({
+      text,
+      tag: activeDumpTag || '', 
+      timestamp: Date.now(), 
+      time: new Date().toLocaleString('en-US', {hour:'2-digit', minute:'2-digit', day:'numeric', month:'short'}) 
+    }); 
+    
+    save('brain_notes', notes); 
+    document.getElementById('brain-dump-input').value = ''; 
+    renderBrain(); 
+  }
+
+  function renderBrain(){
+    const tagsContainer = document.getElementById('brain-dump-tags-container');
+    if (tagsContainer) {
+      let tagsHtml = '';
+      getTags().forEach(tag => {
+        const isActive = activeDumpTag === tag.id;
+        tagsHtml += `<span class="dump-tag ${isActive ? 'active-' + tag.id : ''}" onclick="selectBrainTag('${tag.id}')">${tag.label}</span>`;
+      });
+      tagsContainer.innerHTML = tagsHtml;
+    }
+
+    const notes = load('brain_notes', []); 
+    const c = document.getElementById('dump-notes-container'); 
+    c.innerHTML = '';
+    
+    notes.forEach((n, ni) => {
+      const div = document.createElement('div'); 
+      div.className = 'dump-note show-on-hover'; 
+      
+      let displayTime = n.time; 
+      if(n.timestamp) {
+         const dObj = new Date(n.timestamp);
+         const d = dObj.getDate();
+         const m = dObj.getMonth() + 1; 
+         const hh = String(dObj.getHours()).padStart(2, '0');
+         const mm = String(dObj.getMinutes()).padStart(2, '0');
+         displayTime = `${d} ${t('m'+m)} ${hh}:${mm}`; 
+      }
+
+      let scheduleText = '';
+      if (n.scheduledDateISO) {
+         const parts = n.scheduledDateISO.split('-');
+         const sy = parts[0];
+         const sm = parseInt(parts[1]); 
+         const sd = parseInt(parts[2]);
+         scheduleText = `<br><span style="color:var(--accent); font-weight:600;">→ ${sd} ${t('m'+sm)} ${sy}</span>`;
+      } else if (n.scheduledDate) {
+         scheduleText = `<br><span style="color:var(--accent); font-weight:600;">→ ${n.scheduledDate}</span>`;
+      }
+      
+      const tagHtml = n.tag ? `<div style="margin-bottom: 6px;"><span class="k-tag ${n.tag}" style="font-size:10px; display:inline-block;">${getTagLabel(n.tag)}</span></div>` : '';
+      
+      div.innerHTML = `
+        <div style="flex:1; min-width:0; word-break:break-word; line-height:1.6;">
+          ${tagHtml}
+          <div style="color:var(--ink); font-weight:400;">${n.text.replace(/\n/g,'<br>')}</div>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px; flex-shrink:0; min-width:max-content;">
+          <span style="font-size:var(--fs-xs); color:var(--ink-muted); text-align:right;">${displayTime}${scheduleText}</span>
+          <div class="hover-actions">
+            <button class="action-btn" title="${t('mSch')}" onclick="openModal('schedule_dump', ${ni})">📅</button>
+            <button class="action-btn" onclick="openModal('edit_dump', ${ni})">✎</button>
+            <button class="action-btn" onclick="deleteDumpNote(${ni})">×</button>
+          </div>
+        </div>
+      `; 
+      c.appendChild(div);
+    });
+  }
+
+  function deleteDumpNote(i){ const n=load('brain_notes',[]); n.splice(i,1); save('brain_notes',n); renderBrain(); }
+
+  function renderTagsPanel() {
+    const manageArea = document.getElementById('tags-manage-area'); let mHtml = '<div style="margin-bottom:20px; display:flex; flex-direction:column; gap:8px;">';
+    getTags().forEach(tg => { mHtml += `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px; border:2px solid var(--line-strong); border-radius:var(--radius); background:var(--page-card);"><span class="k-tag ${tg.id}">${tg.label}</span><div><button class="action-btn" onclick="openModal('edit_tag', '${tg.id}')">✎</button><button class="action-btn" onclick="deleteTag('${tg.id}')">×</button></div></div>`; });
+    mHtml += `</div><div style="padding-top:16px; border-top:2px dashed var(--line-strong);"><div class="form-row"><input class="form-input" id="nt-label" placeholder="${t('phNewTag')}" maxlength="20"></div><div class="form-row" style="display:flex;gap:10px; align-items:center;"><label style="font-size:12px; display:flex; align-items:center; gap:4px;">${t('mBg')} <input type="color" id="nt-bg" value="#f5f0e0"></label><label style="font-size:12px; display:flex; align-items:center; gap:4px;">${t('mCol')} <input type="color" id="nt-color" value="#8a6a2d"></label></div><div style="text-align:right;"><button class="btn btn-primary" onclick="addNewTagPanel()">${t('btnAdd')}</button></div></div>`; manageArea.innerHTML = mHtml;
+    document.getElementById('tags-filter-select').innerHTML = `<option value="">${t('selTg')}</option>` + getTags().map(tag=>`<option value="${tag.id}">${tag.label}</option>`).join(''); renderFilteredTasks();
+  }
+  function addNewTagPanel() { const label = document.getElementById('nt-label').value.trim(); if(!label) return; let id = 't_'+Date.now(); const tags = getTags(); tags.push({ id, label, bg: document.getElementById('nt-bg').value, color: document.getElementById('nt-color').value }); saveTags(tags); }
+  function deleteTag(id) { const tags = getTags().filter(t => t.id !== id); saveTags(tags); }
+  function jumpToTaskLocation(yr, mo, dy) {
+      if (dy !== null && dy !== undefined && dy !== 'null') { logDate = new Date(yr, mo, dy); showPanel('daily'); }
+      else if (mo !== null && mo !== undefined && mo !== 'null') { currentYear = yr; currentMonth = mo; showPanel('monthly'); }
+      else if (yr !== null && yr !== undefined && yr !== 'null') { currentYear = yr; showPanel('yearly'); }
+      else { openModal('alert', t('mNoDate')); }
+  }
+
+ function renderFilteredTasks() {
+    const sTag = document.getElementById('tags-filter-select').value; const container = document.getElementById('tags-filter-results'); container.innerHTML = ''; if(!sTag) return;
+    
+    // 1. KOLEKSİYON: Normal Görevleri Filtreleme ve Yazdırma
+    load('tasks_v2', []).filter(t => t.tag === sTag).forEach(tsk => {
+      const div = document.createElement('div'); div.className = 'log-entry show-on-hover';
+      const sy = tsk.year !== null && tsk.year !== undefined ? tsk.year : 'null';
+      const sm = tsk.month !== null && tsk.month !== undefined ? tsk.month : 'null';
+      const sd = tsk.day !== null && tsk.day !== undefined ? tsk.day : 'null';
+      const jumpBtn = (sy !== 'null') ? `<button class="action-btn" title="Konuma Git / Go to Date" onclick="jumpToTaskLocation(${sy}, ${sm}, ${sd})">↗</button>` : '';
+      
+      div.innerHTML = `${genSymHtml(tsk, tsk.year, tsk.month, tsk.day, tsk.dayKey)}<div class="log-text" ${genTextAttrs(tsk, tsk.year, tsk.month, tsk.day, tsk.dayKey)} style="${tsk.sym==='✓'?'text-decoration:line-through;opacity:.5':''}">${tsk.text}</div><div class="hover-actions">${jumpBtn}<button class="action-btn" onclick="openModal('edit_task', '${tsk.id}')">✎</button><button class="action-btn" onclick="deleteTask('${tsk.id}')">×</button></div>`; 
+      container.appendChild(div);
+    });
+
+    // 2. KOLEKSİYON: Beyin Fırtınası Notlarını Filtreleme ve Yazdırma
+    const notes = load('brain_notes', []);
+    notes.forEach((n, ni) => {
+      if (n.tag === sTag) {
+        const div = document.createElement('div'); div.className = 'log-entry show-on-hover';
+        div.style.borderLeft = '3px dashed var(--accent)'; 
+        
+        // Buton her halükarda Beyin Fırtınası paneline yönlendirecek şekilde ayarlandı
+        let jumpBtn = `<button class="action-btn" title="${t('navBr')}" onclick="showPanel('brain')">💭</button>`;
+        
+        div.innerHTML = `
+          <span class="log-symbol" style="cursor:default; color:var(--accent);">✦</span>
+          <div class="log-text" style="font-style: italic; color: var(--ink-soft);">${n.text} <span style="font-size:11px; opacity:0.6; font-style:normal; font-weight:600; color:var(--migrate); margin-left:6px;">(${t('navBr')})</span></div>
+          <div class="hover-actions">
+            ${jumpBtn}
+            <button class="action-btn" onclick="openModal('edit_dump', ${ni})">✎</button>
+            <button class="action-btn" onclick="deleteDumpNote(${ni}); renderFilteredTasks();">×</button>
+          </div>
+        `;
+        container.appendChild(div);
+      }
+    });
+  }
+
+  function renderListsPanel() {
+    const container = document.getElementById('lists-container'); container.innerHTML = '';
+    getLists().forEach(lst => {
+      const card = document.createElement('div'); card.className = 'list-card'; let itemsHtml = '';
+      lst.items.forEach(itm => { itemsHtml += `<div class="list-item-row show-on-hover"><input type="checkbox" ${itm.done?'checked':''} onchange="toggleListItem('${lst.id}', '${itm.id}', this.checked)"><span class="list-item-text" style="${itm.done?'text-decoration:line-through;opacity:0.5':''}">${itm.text}</span><div class="hover-actions"><button class="action-btn" onclick="openModal('edit_list_item', {lid:'${lst.id}', iid:'${itm.id}'})">✎</button><button class="action-btn" onclick="deleteListItem('${lst.id}', '${itm.id}')">×</button></div></div>`; });
+      card.innerHTML = `<div class="list-title show-on-hover"><span>${lst.title}</span><div class="hover-actions"><button class="action-btn" onclick="openModal('edit_list', '${lst.id}')">✎</button><button class="action-btn" onclick="deleteList('${lst.id}')">×</button></div></div><div style="flex:1; border:2px solid var(--line-strong); border-radius:var(--radius); overflow:hidden;">${itemsHtml}</div><div class="kanban-add" onclick="openModal('add_list_item', '${lst.id}')">${t('lItm')}</div>`; container.appendChild(card);
+    });
+  }
+  function toggleListItem(lid, iid, checked) { const lists = getLists(); const lst = lists.find(x => x.id === lid); if(lst) { const itm = lst.items.find(y => y.id === iid); if(itm) { itm.done = checked; saveLists(lists); renderListsPanel(); } } }
+  function deleteListItem(lid, iid) { const lists = getLists(); const lst = lists.find(x => x.id === lid); if(lst) { lst.items = lst.items.filter(y => y.id !== iid); saveLists(lists); renderListsPanel(); } }
+  function deleteList(lid) { let lists = getLists(); lists = lists.filter(x => x.id !== lid); saveLists(lists); renderListsPanel(); renderIndex(); }
+
+  // --- MERKEZİ MODAL KONTROLÜ ---
+  function openYearlyAdd(mi, mName, yr) {
+    const maxDays = new Date(yr, mi + 1, 0).getDate(); document.getElementById('modal-title').textContent = mName + ' — ' + t('mEvt');
+    document.getElementById('modal-body').innerHTML = `<div class="form-row"><label class="form-label">${t('mDay')} (1 - ${maxDays})</label><input class="form-input" id="m-day" type="number" min="1" max="${maxDays}" value="1"></div><div class="form-row"><label class="form-label">${t('mDesc')}</label><input class="form-input" id="m-text" autofocus></div><div class="form-row" style="display:flex; align-items:center; gap:8px;"><input type="checkbox" id="m-repeat" style="width:16px;height:16px;accent-color:var(--accent);"><label for="m-repeat" style="font-size:12px;margin:0;cursor:pointer;">${t('mRep')}</label></div>`;
+    openModal('yearly', { mi, yr, maxDays });
+  }
+
+  function openModal(mode, payload=null) {
+    _modalCtx = { mode, payload }; const b = document.getElementById('modal-body');
+    document.getElementById('modal-actions').innerHTML = `<button class="btn" onclick="closeModal()">${t('btnCanc')}</button><button class="btn btn-primary" onclick="saveModal()">${t('btnSav')}</button>`;
+    
+    if(mode === 'alert') { document.getElementById('modal-title').textContent = t('mInf'); b.innerHTML = `<div style="font-size:var(--fs-norm); font-weight:600; color:var(--ink); text-align:center; padding:20px 0; line-height:1.6;">${payload}</div>`; document.getElementById('modal-actions').innerHTML = `<button class="btn btn-primary" onclick="closeModal()" style="width:100%;">${t('btnOk')}</button>`; }
+    else if(mode === 'confirm_delete_habit') { 
+        document.getElementById('modal-title').textContent = t('mWarn'); 
+        b.innerHTML = `<div style="font-size:var(--fs-norm); font-weight:600; color:var(--ink); text-align:center; padding:20px 0; line-height:1.6;">${t('mDelHabit')}</div>`; 
+        document.getElementById('modal-actions').innerHTML = `<button class="btn" onclick="closeModal()">${t('btnCanc')}</button><button class="btn btn-primary" onclick="saveModal()" style="background:#b05070; border-color:#b05070;">${t('mYesDel')}</button>`; 
+    }
+    else if(mode === 'add_vision_note') { document.getElementById('modal-title').textContent = t('vNt'); b.innerHTML = `<div class="form-row"><label class="form-label">${t('mNot')}</label><textarea class="form-textarea" id="vn-text" autofocus></textarea></div>`; }
+    else if(mode === 'edit_vision_note') { document.getElementById('modal-title').textContent = t('mNot'); const items = load('v3_vision_pins', []); b.innerHTML = `<div class="form-row"><label class="form-label">${t('mNot')}</label><textarea class="form-textarea" id="vn-text" autofocus>${items[payload].content}</textarea></div>`; }
+    else if(mode === 'add_monthly') { document.getElementById('modal-title').textContent = t('mTasks'); b.innerHTML = `<div class="form-row"><label class="form-label">${t('mDesc')}</label><input class="form-input" id="u-text" autofocus></div>`; }
+    else if(mode === 'add_weekly') { document.getElementById('modal-title').textContent = t('mTasks'); b.innerHTML = `<div class="form-row"><label class="form-label">${t('mDesc')}</label><input class="form-input" id="w-text" autofocus></div>`; }
+    else if(mode === 'edit_task') {
+      document.getElementById('modal-title').textContent = t('mEdit'); const t_val = load('tasks_v2', []).find(x => x.id == payload); if(!t_val) return;
+      b.innerHTML = `<div class="form-row"><label class="form-label">${t('mSym')}</label><select id="e-sym" class="form-select"><option value="●" ${t_val.sym==='●'?'selected':''}>● ${t('legTsk')}</option><option value="○" ${t_val.sym==='○'?'selected':''}>○ ${t('legEvt')}</option><option value="—" ${t_val.sym==='—'?'selected':''}>— ${t('mNot')}</option><option value="★" ${t_val.sym==='★'?'selected':''}>★ ${t('legPri')}</option></select></div><div class="form-row"><label class="form-label">${t('navTg')}</label><select id="e-tag" class="form-select">${getTagOptionsHtml(t_val.tag)}</select></div><div class="form-row"><label class="form-label">${t('mRec')}</label><select id="e-recurrence" class="form-select"><option value="none" ${t_val.recurrence==='none'?'selected':''}>${t('rNo')}</option><option value="daily" ${t_val.recurrence==='daily'?'selected':''}>${t('rD')}</option><option value="weekly" ${t_val.recurrence==='weekly'?'selected':''}>${t('rW')}</option><option value="monthly" ${t_val.recurrence==='monthly'?'selected':''}>${t('rM')}</option><option value="yearly" ${t_val.recurrence==='yearly'?'selected':''}>${t('rY')}</option></select></div><div class="form-row"><label class="form-label">${t('mDesc')}</label><input class="form-input" id="e-text" value="${t_val.text}"></div><div class="form-row"><label class="form-label">${t('mTim')}</label><input class="form-input" type="time" id="e-time" value="${t_val.time || ''}"></div>`;
+    }
+    else if(mode === 'add_kanban') { document.getElementById('modal-title').textContent = t('kAdd'); b.innerHTML = `<div class="form-row"><label class="form-label">${t('mTit')}</label><input class="form-input" id="k-title" autofocus></div><div class="form-row"><label class="form-label">${t('mNts')}</label><input class="form-input" id="k-note"></div>`; }
+    else if(mode === 'edit_kanban') { document.getElementById('modal-title').textContent = t('kAdd'); const card = load('kanban', defaultKanban())[payload.col].find(x => x.id == payload.id); b.innerHTML = `<div class="form-row"><label class="form-label">${t('mTit')}</label><input class="form-input" id="k-title" value="${card.title}"></div><div class="form-row"><label class="form-label">${t('mNts')}</label><input class="form-input" id="k-note" value="${card.note||''}"></div>`; }
+    else if(mode === 'add_habit') { document.getElementById('modal-title').textContent = t('hAdd'); b.innerHTML = `<div class="form-row"><label class="form-label">${t('mNam')}</label><input class="form-input" id="h-name" autofocus></div><div class="form-row"><label style="font-size:var(--fs-sm); display:flex; align-items:center; gap:6px; cursor:pointer;"><input type="checkbox" id="h-repeat" checked style="accent-color:var(--accent); width:16px; height:16px;"> ${t('mRepMo')}</label></div>`; }
+    else if(mode === 'edit_habit') { document.getElementById('modal-title').textContent = t('mEdit'); const h = load('habits', []).find(x => x.id == payload); const isRep = h.repeat !== false; b.innerHTML = `<div class="form-row"><label class="form-label">${t('mNam')}</label><input class="form-input" id="h-name" value="${h.name}"></div><div class="form-row"><label style="font-size:var(--fs-sm); display:flex; align-items:center; gap:6px; cursor:pointer;"><input type="checkbox" id="h-repeat" ${isRep?'checked':''} style="accent-color:var(--accent); width:16px; height:16px;"> ${t('mRepMo')}</label></div>`; }
+    else if(mode === 'edit_dump') { 
+      document.getElementById('modal-title').textContent = t('mNot'); 
+      const n = load('brain_notes',[])[payload];
+      b.innerHTML = `<div class="form-row"><label class="form-label">${t('navTg')}</label><select class="form-select" id="ed-tag">${getTagOptionsHtml(n.tag)}</select></div><div class="form-row"><label class="form-label">${t('mNot')}</label><textarea class="form-textarea" id="ed-text">${n.text}</textarea></div>`; 
+    }
+    else if(mode === 'schedule_dump') { 
+        document.getElementById('modal-title').textContent = t('mSch'); 
+        const n = load('brain_notes',[])[payload]; 
+        b.innerHTML = `<div style="font-size:var(--fs-sm);color:var(--ink-soft);margin-bottom:14px;padding:12px;background:var(--page-warm);border-radius:var(--radius); border:1px solid var(--line-strong);">${n.text}</div><div class="form-row"><label class="form-label">${t('mDat')}</label><input type="date" class="form-input" id="sd-date"><div style="font-size:11px; margin-top:4px; opacity:0.7;">${t('mDateReq')}</div></div>`; 
+    }
+    else if(mode === 'add_goal_cat') {
+      document.getElementById('modal-title').textContent = t('mCat');
+      b.innerHTML = `<div class="form-row"><label class="form-label">${t('mTit')}</label><input class="form-input" id="g-title" autofocus></div><div class="form-row" style="display:flex; flex-wrap:wrap; gap:12px; margin-top:10px;"><label style="font-size:var(--fs-sm); display:flex; align-items:center; gap:4px; cursor:pointer;"><input type="checkbox" id="g-show-y" checked style="accent-color:var(--accent);"> ${t('mGy')}</label><label style="font-size:var(--fs-sm); display:flex; align-items:center; gap:4px; cursor:pointer;"><input type="checkbox" id="g-show-m" style="accent-color:var(--accent);"> ${t('mGm')}</label><label style="font-size:var(--fs-sm); display:flex; align-items:center; gap:4px; cursor:pointer;"><input type="checkbox" id="g-show-w" style="accent-color:var(--accent);"> ${t('mGw')}</label><label style="font-size:var(--fs-sm); display:flex; align-items:center; gap:4px; cursor:pointer;"><input type="checkbox" id="g-show-d" style="accent-color:var(--accent);"> ${t('mGd')}</label></div>`;
+    }
+    else if(mode === 'edit_goal_cat') {
+      document.getElementById('modal-title').textContent = t('mCat'); const g = getGoals().find(x => x.id == payload); if(!g) return;
+      b.innerHTML = `<div class="form-row"><label class="form-label">${t('mTit')}</label><input class="form-input" id="g-title" value="${g.title}" autofocus></div><div class="form-row" style="display:flex; flex-wrap:wrap; gap:12px; margin-top:10px;"><label style="font-size:var(--fs-sm); display:flex; align-items:center; gap:4px; cursor:pointer;"><input type="checkbox" id="g-show-y" ${g.showInYearly?'checked':''} style="accent-color:var(--accent);"> ${t('mGy')}</label><label style="font-size:var(--fs-sm); display:flex; align-items:center; gap:4px; cursor:pointer;"><input type="checkbox" id="g-show-m" ${g.showInMonthly?'checked':''} style="accent-color:var(--accent);"> ${t('mGm')}</label><label style="font-size:var(--fs-sm); display:flex; align-items:center; gap:4px; cursor:pointer;"><input type="checkbox" id="g-show-w" ${g.showInWeekly?'checked':''} style="accent-color:var(--accent);"> ${t('mGw')}</label><label style="font-size:var(--fs-sm); display:flex; align-items:center; gap:4px; cursor:pointer;"><input type="checkbox" id="g-show-d" ${g.showInDaily?'checked':''} style="accent-color:var(--accent);"> ${t('mGd')}</label></div>`;
+    }
+    else if(mode === 'add_goal_item') {
+      document.getElementById('modal-title').textContent = t('navGl');
+      b.innerHTML = `<div class="form-row"><label class="form-label">${t('mSym')}</label><select id="gi-sym" class="form-select"><option value="●">● ${t('legTsk')}</option><option value="★" selected>★ ${t('legPri')}</option></select></div><div class="form-row"><label class="form-label">${t('mNot')}</label><input class="form-input" id="gi-text" autofocus></div>`;
+    }
+    else if(mode === 'edit_goal_item') {
+      document.getElementById('modal-title').textContent = t('navGl'); const g = getGoals().find(x => x.id == payload.gid); if(!g) return; const itm = g.items.find(y => y.id == payload.iid); if(!itm) return;
+      b.innerHTML = `<div class="form-row"><label class="form-label">${t('mSym')}</label><select id="gi-sym" class="form-select"><option value="●" ${itm.sym==='●'?'selected':''}>● ${t('legTsk')}</option><option value="★" ${itm.sym==='★'?'selected':''}>★ ${t('legPri')}</option></select></div><div class="form-row"><label class="form-label">${t('mNot')}</label><input class="form-input" id="gi-text" value="${itm.text}" autofocus></div>`;
+    }
+    else if(mode === 'add_list') { document.getElementById('modal-title').textContent = t('lAdd'); b.innerHTML = `<div class="form-row"><label class="form-label">${t('mTit')}</label><input class="form-input" id="l-title" autofocus></div><div class="form-row" style="display:flex; flex-wrap:wrap; gap:12px; margin-top:10px;"><label style="font-size:var(--fs-sm); display:flex; align-items:center; gap:4px; cursor:pointer;"><input type="checkbox" id="l-show-y" style="accent-color:var(--accent);"> ${t('mGy')}</label><label style="font-size:var(--fs-sm); display:flex; align-items:center; gap:4px; cursor:pointer;"><input type="checkbox" id="l-show-m" style="accent-color:var(--accent);"> ${t('mGm')}</label><label style="font-size:var(--fs-sm); display:flex; align-items:center; gap:4px; cursor:pointer;"><input type="checkbox" id="l-show-w" style="accent-color:var(--accent);"> ${t('mGw')}</label><label style="font-size:var(--fs-sm); display:flex; align-items:center; gap:4px; cursor:pointer;"><input type="checkbox" id="l-show-d" style="accent-color:var(--accent);"> ${t('mGd')}</label></div>`; }
+    else if(mode === 'edit_list') { document.getElementById('modal-title').textContent = t('lAdd'); const lst = getLists().find(x=>x.id==payload); b.innerHTML = `<div class="form-row"><label class="form-label">${t('mTit')}</label><input class="form-input" id="l-title" value="${lst.title}"></div><div class="form-row" style="display:flex; flex-wrap:wrap; gap:12px; margin-top:10px;"><label style="font-size:var(--fs-sm); display:flex; align-items:center; gap:4px; cursor:pointer;"><input type="checkbox" id="l-show-y" ${lst.showInYearly?'checked':''} style="accent-color:var(--accent);"> ${t('mGy')}</label><label style="font-size:var(--fs-sm); display:flex; align-items:center; gap:4px; cursor:pointer;"><input type="checkbox" id="l-show-m" ${lst.showInMonthly?'checked':''} style="accent-color:var(--accent);"> ${t('mGm')}</label><label style="font-size:var(--fs-sm); display:flex; align-items:center; gap:4px; cursor:pointer;"><input type="checkbox" id="l-show-w" ${lst.showInWeekly?'checked':''} style="accent-color:var(--accent);"> ${t('mGw')}</label><label style="font-size:var(--fs-sm); display:flex; align-items:center; gap:4px; cursor:pointer;"><input type="checkbox" id="l-show-d" ${lst.showInDaily?'checked':''} style="accent-color:var(--accent);"> ${t('mGd')}</label></div>`; }    
+    else if(mode === 'add_list_item') { document.getElementById('modal-title').textContent = t('lItm'); b.innerHTML = `<input class="form-input" id="li-text" autofocus>`; }
+    else if(mode === 'edit_list_item') { document.getElementById('modal-title').textContent = t('lItm'); b.innerHTML = `<input class="form-input" id="li-text" value="${getLists().find(x=>x.id==payload.lid).items.find(y=>y.id==payload.iid).text}"></div>`; }
+    else if(mode === 'edit_tag') { document.getElementById('modal-title').textContent = t('tMan'); const tag = getTags().find(x => x.id == payload); b.innerHTML = `<div class="form-row"><label class="form-label">${t('mNam')}</label><input class="form-input" id="et-label" value="${tag.label}"></div><div class="form-row" style="display:flex;gap:10px;"><label>${t('mBg')} <input type="color" id="et-bg" value="${tag.bg}"></label><label>${t('mCol')} <input type="color" id="et-color" value="${tag.color}"></label></div>`; }
+    else if(mode === 'profile') { 
+        document.getElementById('modal-title').textContent = t('navPr'); 
+        b.innerHTML = `
+          <div class="form-row"><label class="form-label" data-i18n="authEm">Email</label><input class="form-input" disabled value="${currentUser ? currentUser.email : ''}" style="opacity:0.7;"></div>
+          <div class="form-row"><label class="form-label">${t('mNam')}</label><input class="form-input" id="p-name" placeholder="..." value="${currentUser && currentUser.displayName ? currentUser.displayName : ''}"></div>
+          <div style="margin-top:24px; padding-top:16px; border-top:2px solid var(--line-strong); display:flex; flex-direction:column; gap:8px;">
+            <button class="btn" style="width:100%; border-color:#b05070; color:#b05070; background:var(--accent-pale);" onclick="logoutUser()">${t('mOut')}</button>
+          </div>
+        `; 
+    }
+    else if(mode === 'settings') {
+      document.getElementById('modal-title').textContent = t('navSt');
+      tempAppConfig = { theme: load('app_theme', 'mystic_forest'), mode: load('app_mode', 'light'), font: load('app_font', 'set1'), size: load('app_fontsize', 'medium') };
+      b.innerHTML = `
+        <div class="form-label">${t('sLn')}</div>
+        <select id="lang-select" class="form-select" style="margin-bottom:14px;">
+          <option value="en" ${currentLang==='en'?'selected':''}>🇬🇧 English</option>
+          <option value="tr" ${currentLang==='tr'?'selected':''}>🇹🇷 Türkçe</option>
+          <option value="es" ${currentLang==='es'?'selected':''}>🇪🇸 Español</option>
+          <option value="fr" ${currentLang==='fr'?'selected':''}>🇫🇷 Français</option>
+          <option value="de" ${currentLang==='de'?'selected':''}>🇩🇪 Deutsch</option>
+          <option value="it" ${currentLang==='it'?'selected':''}>🇮🇹 Italiano</option>
+          <option value="pt" ${currentLang==='pt'?'selected':''}>🇵🇹 Português</option>
+          <option value="ru" ${currentLang==='ru'?'selected':''}>🇷🇺 Русский</option>
+          <option value="ja" ${currentLang==='ja'?'selected':''}>🇯🇵 日本語</option>
+          <option value="zh" ${currentLang==='zh'?'selected':''}>🇨🇳 中文</option>
+        </select>
+
+        <div class="form-label">${t('sMd')}</div><button class="btn" style="width:100%;margin-bottom:14px;" onclick="previewMode()">${t('sLd')}</button>
+        
+      <div class="form-label">${t('sTh')}</div>
+        <div class="settings-grid" id="theme-btn-container" style="margin-bottom:14px; display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <div class="theme-btn ${tempAppConfig.theme==='mystic_forest'?'active':''}" onclick="previewTheme('mystic_forest', this)"><span class="theme-color-dot" style="background:#638872;"></span>Mystic Forest</div>
+          <div class="theme-btn ${tempAppConfig.theme==='ocean_sunset'?'active':''}" onclick="previewTheme('ocean_sunset', this)"><span class="theme-color-dot" style="background:#EB8445;"></span>Ocean Sunset</div>
+          <div class="theme-btn ${tempAppConfig.theme==='chocolate'?'active':''}" onclick="previewTheme('chocolate', this)"><span class="theme-color-dot" style="background:#55453A;"></span>Chocolate</div>
+          <div class="theme-btn ${tempAppConfig.theme==='lotus_pond'?'active':''}" onclick="previewTheme('lotus_pond', this)"><span class="theme-color-dot" style="background:#839958;"></span>Lotus Pond</div>
+          <div class="theme-btn ${tempAppConfig.theme==='retro_teal'?'active':''}" onclick="previewTheme('retro_teal', this)"><span class="theme-color-dot" style="background:#CA7C4C;"></span>Retro Teal</div>
+          <div class="theme-btn ${tempAppConfig.theme==='lapis_mosaic'?'active':''}" onclick="previewTheme('lapis_mosaic', this)"><span class="theme-color-dot" style="background:#1A4D94;"></span>Lapis Mosaic</div>
+          <div class="theme-btn ${tempAppConfig.theme==='sweet_pastel'?'active':''}" onclick="previewTheme('sweet_pastel', this)"><span class="theme-color-dot" style="background:#D6A5B6;"></span>Sweet Pastel</div>
+          <div class="theme-btn ${tempAppConfig.theme==='bohemian_fiesta'?'active':''}" onclick="previewTheme('bohemian_fiesta', this)"><span class="theme-color-dot" style="background:#F66483;"></span>Bohemian Fiesta</div>
+          <div class="theme-btn ${tempAppConfig.theme==='carnival_night'?'active':''}" onclick="previewTheme('carnival_night', this)"><span class="theme-color-dot" style="background:#E6A341;"></span>Carnival Night</div>
+          <div class="theme-btn ${tempAppConfig.theme==='coastal_breeze'?'active':''}" onclick="previewTheme('coastal_breeze', this)"><span class="theme-color-dot" style="background:#74B9C7;"></span>Coastal Breeze</div>
+        </div>
+
+        <div class="form-label">${t('sFn')}</div><div class="settings-grid" style="margin-bottom:16px;">
+        <div class="theme-btn ${tempAppConfig.font==='set1'?'active':''}" onclick="previewFont('set1')" style="font-family:'Forum', serif;">${t('fS1')}</div>
+        <div class="theme-btn ${tempAppConfig.font==='set2'?'active':''}" onclick="previewFont('set2')" style="font-family:'Marcellus', serif;">${t('fS2')}</div>
+        <div class="theme-btn ${tempAppConfig.font==='set3'?'active':''}" onclick="previewFont('set3')" style="font-family:'Playfair Display', serif;">${t('fS3')}</div>
+        <div class="theme-btn ${tempAppConfig.font==='set4'?'active':''}" onclick="previewFont('set4')" style="font-family:'Medula One', cursive;">${t('fS4')}</div>
+        <div class="theme-btn ${tempAppConfig.font==='set5'?'active':''}" onclick="previewFont('set5')" style="font-family:'Varela Round', sans-serif;">${t('fS5')}</div>
+        <div class="theme-btn ${tempAppConfig.font==='set6'?'active':''}" onclick="previewFont('set6')" style="font-family:'EB Garamond', serif;">${t('fS6')}</div>
+        <div class="theme-btn ${tempAppConfig.font==='set7'?'active':''}" onclick="previewFont('set7')" style="font-family:'Montserrat', sans-serif;">${t('fS7')}</div>
+        <div class="theme-btn ${tempAppConfig.font==='set8'?'active':''}" onclick="previewFont('set8')" style="font-family:'Oswald', sans-serif;">${t('fS8')}</div>
+        <div class="theme-btn ${tempAppConfig.font==='set9'?'active':''}" onclick="previewFont('set9')" style="font-family:'Space Mono', monospace;">${t('fS9')}</div>
+        <div class="theme-btn ${tempAppConfig.font==='set10'?'active':''}" onclick="previewFont('set10')" style="font-family:'Cinzel', serif;">${t('fS10')}</div>
+        </div>
+
+        <div class="form-label">${t('sSz')}</div>
+        <div class="settings-grid" id="size-btn-container" style="margin-bottom:14px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
+          <div class="theme-btn ${tempAppConfig.size==='small'?'active':''}" style="justify-content:center;" onclick="previewFontSize('small', this)">${t('sSm')}</div>
+          <div class="theme-btn ${tempAppConfig.size==='medium'?'active':''}" style="justify-content:center;" onclick="previewFontSize('medium', this)">${t('sMed')}</div>
+          <div class="theme-btn ${tempAppConfig.size==='large'?'active':''}" style="justify-content:center;" onclick="previewFontSize('large', this)">${t('sLg')}</div>
+        </div>
+
+      `;
+    }
+    document.getElementById('add-modal').classList.add('open');
+  }
+
+  function closeModal() { if(_modalCtx.mode === 'settings') { document.body.setAttribute('data-theme', load('app_theme', 'mystic_forest')); document.body.setAttribute('data-mode', load('app_mode', 'light')); document.body.setAttribute('data-font', load('app_font', 'set1')); document.body.setAttribute('data-fontsize', load('app_fontsize', 'medium')); } document.getElementById('add-modal').classList.remove('open'); }
+
+  function saveModal() {
+    const { mode, payload } = _modalCtx;
+    
+    if(mode==='yearly') { const text = document.getElementById('m-text').value.trim(); if(!text) return closeModal(); const dv = document.getElementById('m-day').value; const isRep = document.getElementById('m-repeat') && document.getElementById('m-repeat').checked; addTask(text, { sym:'○', isFutureLog:true, recurrence:(isRep?'yearly':'none'), ...buildKeys(payload.yr, payload.mi, dv) }); closeModal(); renderYearly(); }
+    else if(mode==='add_monthly') { const text = document.getElementById('u-text').value.trim(); if(text) addTask(text, {sym:'●', year:currentYear, month:currentMonth, day:selectedMonthlyDay, dayKey:`${currentYear}_${currentMonth}_${selectedMonthlyDay}`, weekKey:weekKey(new Date(currentYear, currentMonth, selectedMonthlyDay))}); closeModal(); renderMonthly(); }
+    else if(mode==='add_weekly') { 
+      const text = document.getElementById('w-text').value.trim(); 
+      if(text) {
+        const parts = payload.split('_');
+        const yr = parseInt(parts[0]);
+        const mo = parseInt(parts[1]);
+        const dy = parseInt(parts[2]);
+        addTask(text, {
+          sym: '●', 
+          year: yr, 
+          month: mo, 
+          day: dy, 
+          dayKey: payload, 
+          weekKey: weekKey(new Date(yr, mo, dy))
+        });
+      } 
+      closeModal(); 
+      renderWeekly(); 
+    }
+    else if(mode==='edit_task') { const text = document.getElementById('e-text').value.trim(); const time = document.getElementById('e-time').value; const eSym = document.getElementById('e-sym').value; const eTag = document.getElementById('e-tag') ? document.getElementById('e-tag').value : ''; const eRec = document.getElementById('e-recurrence') ? document.getElementById('e-recurrence').value : 'none'; if(text) { updateTask(payload, {text, time, sym:eSym, tag:eTag, recurrence:eRec}); const t_val = load('tasks_v2', []).find(x => x.id == payload); setNativeAlarm(payload, text, t_val.year, t_val.month, t_val.day, time); } closeModal(); refreshCurrentPanel(); }
+    else if(mode==='add_kanban') { const title = document.getElementById('k-title').value.trim(); const note = document.getElementById('k-note').value.trim(); if(title) { const d = load('kanban', defaultKanban()); d[payload].push({id:String(Date.now()), title, note}); save('kanban', d); } closeModal(); renderKanban(); }
+    else if(mode==='edit_kanban') { const title = document.getElementById('k-title').value.trim(); const note = document.getElementById('k-note').value.trim(); if(title) { const d = load('kanban', defaultKanban()); const c = d[payload.col].find(x => x.id == payload.id); if(c) { c.title = title; c.note = note; save('kanban', d); } } closeModal(); renderKanban(); }
+    else if(mode==='add_habit') { const name = document.getElementById('h-name').value.trim(); const repeat = document.getElementById('h-repeat').checked; if(name) { const h = load('habits', []); h.push({ id: String(Date.now()), name, repeat, year: currentYear, month: currentMonth }); save('habits', h); } closeModal(); renderHabits(); }
+    else if(mode==='edit_habit') { const name = document.getElementById('h-name').value.trim(); const repeat = document.getElementById('h-repeat').checked; if(name) { const h = load('habits', []); const item = h.find(x => x.id == payload); if(item) { item.name = name; item.repeat = repeat; save('habits', h); } } closeModal(); renderHabits(); }
+    else if(mode==='confirm_delete_habit') {
+        const habits = load('habits', []);
+        const updatedHabits = habits.filter(x => x.id != payload);
+        save('habits', updatedHabits);
+        renderHabits();
+        closeModal();
+    }
+    else if(mode==='add_vision_note') { const text = document.getElementById('vn-text') ? document.getElementById('vn-text').value.trim() : ''; if(text) { const pins = load('v3_vision_pins', []); pins.push({type:'text', content:text}); save('v3_vision_pins', pins); } closeModal(); renderVisionBoard(); }
+    else if(mode==='edit_vision_note') { const text = document.getElementById('vn-text') ? document.getElementById('vn-text').value.trim() : ''; if(text) { const pins = load('v3_vision_pins', []); pins[payload].content = text; save('v3_vision_pins', pins); } closeModal(); renderVisionBoard(); }
+    else if(mode==='edit_dump') { const text = document.getElementById('ed-text').value.trim(); const tag = document.getElementById('ed-tag').value; if(text) { const notes = load('brain_notes', []); notes[payload].text = text; notes[payload].tag = tag; save('brain_notes', notes); } closeModal(); renderBrain(); }
+    else if(mode==='schedule_dump') { const dateVal = document.getElementById('sd-date').value; if(dateVal) { const notes = load('brain_notes', []); const note = notes[payload]; note.scheduledDateISO = dateVal; const parts = dateVal.split('-'); const yr = parseInt(parts[0]); const mo = parseInt(parts[1]) - 1; const dy = parseInt(parts[2]); addTask(note.text, { tag: note.tag, sym: '●', year: yr, month: mo, day: dy, dayKey: `${yr}_${mo}_${dy}`, weekKey: weekKey(new Date(yr, mo, dy)) }); save('brain_notes', notes); } closeModal(); renderBrain(); }
+    else if(mode==='add_goal_cat') {
+      const title = document.getElementById('g-title').value.trim(); if(title) { const goals = getGoals(); goals.push({ id: 'g_'+Date.now(), title, items: [], showInYearly: document.getElementById('g-show-y').checked, showInMonthly: document.getElementById('g-show-m').checked, showInWeekly: document.getElementById('g-show-w').checked, showInDaily: document.getElementById('g-show-d').checked }); saveGoals(goals); } closeModal(); refreshCurrentPanel();
+    }
+    else if(mode==='edit_goal_cat') {
+      const title = document.getElementById('g-title').value.trim(); if(title) { const goals = getGoals(); const g = goals.find(x => x.id == payload); if(g) { g.title = title; g.showInYearly = document.getElementById('g-show-y').checked; g.showInMonthly = document.getElementById('g-show-m').checked; g.showInWeekly = document.getElementById('g-show-w').checked; g.showInDaily = document.getElementById('g-show-d').checked; saveGoals(goals); } } closeModal(); refreshCurrentPanel();
+    }
+    else if(mode==='add_goal_item') { const text = document.getElementById('gi-text').value.trim(); if(text) { const sym = document.getElementById('gi-sym').value; const goals = getGoals(); const g = goals.find(x => x.id == payload); if(g) { g.items.push({ id: 'gi_'+Date.now(), text, done: false, sym }); saveGoals(goals); } } closeModal(); renderGoalsPanel(); if(['yearly','monthly','weekly','daily'].includes(currentPanel)) refreshCurrentPanel(); }
+    else if(mode==='edit_goal_item') { const text = document.getElementById('gi-text').value.trim(); if(text) { const sym = document.getElementById('gi-sym').value; const goals = getGoals(); const g = goals.find(x => x.id == payload.gid); if(g) { const itm = g.items.find(y => y.id == payload.iid); if(itm) { itm.text = text; itm.sym = sym; saveGoals(goals); } } } closeModal(); renderGoalsPanel(); if(['yearly','monthly','weekly','daily'].includes(currentPanel)) refreshCurrentPanel(); }
+    else if(mode==='add_list') { const title = document.getElementById('l-title').value.trim(); if(title) { const l = getLists(); l.push({ id: 'l_'+Date.now(), title, items: [], showInYearly: document.getElementById('l-show-y').checked, showInMonthly: document.getElementById('l-show-m').checked, showInWeekly: document.getElementById('l-show-w').checked, showInDaily: document.getElementById('l-show-d').checked }); saveLists(l); } closeModal(); refreshCurrentPanel(); }
+    else if(mode==='edit_list') { const title = document.getElementById('l-title').value.trim(); if(title) { const l = getLists(); const lst = l.find(x => x.id == payload); if(lst) { lst.title = title; lst.showInYearly = document.getElementById('l-show-y').checked; lst.showInMonthly = document.getElementById('l-show-m').checked; lst.showInWeekly = document.getElementById('l-show-w').checked; lst.showInDaily = document.getElementById('l-show-d').checked; saveLists(l); } } closeModal(); refreshCurrentPanel(); }
+    else if(mode==='add_list_item') { const text = document.getElementById('li-text').value.trim(); if(text) { const l = getLists(); const lst = l.find(x => x.id == payload); if(lst) { lst.items.push({ id: 'i_'+Date.now(), text, done: false }); saveLists(l); } } closeModal(); renderListsPanel(); }
+    else if(mode==='edit_list_item') { const text = document.getElementById('li-text').value.trim(); if(text) { const l = getLists(); const lst = l.find(x => x.id == payload.lid); if(lst) { const itm = lst.items.find(y => y.id == payload.iid); if(itm) { itm.text = text; saveLists(l); } } } closeModal(); renderListsPanel(); }
+    else if(mode==='edit_tag') { const label = document.getElementById('et-label').value.trim(); if(label) { const tags = getTags(); const tg = tags.find(x => x.id == payload); if(tg) { tg.label = label; tg.bg = document.getElementById('et-bg').value; tg.color = document.getElementById('et-color').value; saveTags(tags); } } closeModal(); }
+    else if(mode==='profile') { const newName = document.getElementById('p-name').value.trim(); if(currentUser) { currentUser.updateProfile({ displayName: newName }).then(() => { document.getElementById('sidebar-profile-name').textContent = newName || currentUser.email.split('@')[0]; closeModal(); }).catch(err => openModal('alert', err.message)); } else { closeModal(); } }
+    else if(mode==='settings') { 
+      const selectedLang = document.getElementById('lang-select').value;
+      currentLang = selectedLang;
+      save('lang', selectedLang);
+
+      save('app_theme', tempAppConfig.theme); 
+      save('app_mode', tempAppConfig.mode); 
+      save('app_font', tempAppConfig.font); 
+      save('app_fontsize', tempAppConfig.size); 
+      
+      document.body.setAttribute('data-theme', tempAppConfig.theme); 
+      document.body.setAttribute('data-mode', tempAppConfig.mode); 
+      document.body.setAttribute('data-font', tempAppConfig.font); 
+      document.body.setAttribute('data-fontsize', tempAppConfig.size); 
+      
+      applyTranslations();
+      refreshCurrentPanel(); 
+      closeModal(); 
+    }
+
+    if (currentPanel === 'tags') { renderFilteredTasks(); }
+  }
+
+  function previewMode() {
+      tempAppConfig.mode = tempAppConfig.mode === 'light' ? 'dark' : 'light';
+      document.body.setAttribute('data-mode', tempAppConfig.mode);
+      save('app_mode', tempAppConfig.mode);
+  }
+  function previewTheme(t, btnRef) { 
+      tempAppConfig.theme = t; document.body.setAttribute('data-theme', t); save('app_theme', t); 
+      if(btnRef) { document.querySelectorAll('#theme-btn-container .theme-btn').forEach(b => b.classList.remove('active')); btnRef.classList.add('active'); }
+  }
+  function previewFont(f, btnRef) { 
+      tempAppConfig.font = f; document.body.setAttribute('data-font', f); save('app_font', f); 
+      if(btnRef) { document.querySelectorAll('#font-btn-container .theme-btn').forEach(b => b.classList.remove('active')); btnRef.classList.add('active'); }
+  }
+  function previewFontSize(s, btnRef) { 
+      tempAppConfig.size = s; document.body.setAttribute('data-fontsize', s); save('app_fontsize', s); 
+      if(btnRef) { document.querySelectorAll('#size-btn-container .theme-btn').forEach(b => b.classList.remove('active')); btnRef.classList.add('active'); }
+  }
+
+  function setNativeAlarm(id, title, year, month, day, timeStr) {
+      if (!timeStr) return; const [hours, minutes] = timeStr.split(':');
+      const alarmDate = new Date(year||today.getFullYear(), month||today.getMonth(), day||today.getDate(), parseInt(hours), parseInt(minutes), 0);
+      const timestamp = alarmDate.getTime(); if (timestamp <= Date.now()) return;
+      
+      if (window.AndroidBridge && window.AndroidBridge.setAlarm) { 
+          window.AndroidBridge.setAlarm(String(id), String(title), String(timestamp)); 
+      } else if (window.Notification) { 
+          if (Notification.permission === "granted") { 
+              setTimeout(() => { new Notification("Fourly Planner 🔔", { body: title }); }, timestamp - Date.now()); 
+          } else if (Notification.permission !== "denied") {
+              Notification.requestPermission().then(permission => {
+                  if (permission === "granted") {
+                      setTimeout(() => { new Notification("Fourly Planner 🔔", { body: title }); }, timestamp - Date.now());
+                  }
+              });
+          }
+      }
+  }
+
+  function init() {
+    document.body.setAttribute('data-theme', load('app_theme', 'mystic_forest')); document.body.setAttribute('data-mode', load('app_mode', 'light'));
+    document.body.setAttribute('data-font', load('app_font', 'set1')); document.body.setAttribute('data-fontsize', load('app_fontsize', 'medium'));
+    currentLang = load('lang', 'en'); applyTranslations();
+    document.getElementById('topbar-date').textContent = today.toLocaleDateString(currentLang, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    renderTagStyles(); updateTagSelects(); showPanel('index');
+  }
+  init();
+</script>
+</body>
+</html>
